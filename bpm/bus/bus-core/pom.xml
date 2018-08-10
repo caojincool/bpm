@@ -9,13 +9,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>bus-core</artifactId>
-    <name>bus-rest</name>
+    <name>bus-core</name>
     <dependencies>
+    
         <dependency>
             <groupId>com.dstz.agilebpm</groupId>
-            <artifactId>base-rest</artifactId>
+            <artifactId>bus-api</artifactId>
         </dependency>
-        
 
     </dependencies>
 </project>

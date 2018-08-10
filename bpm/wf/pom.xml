@@ -13,8 +13,10 @@
     <description>表单</description>
 
     <modules>
-        <module>form-api</module>
-        <module>form-core</module>
-        <module>form-rest</module>
+        <module>wf-api</module>
+        <module>wf-core</module>
+        <module>wf-rest</module>
+        <module>wf-act</module>
+        <module>wf-plugin</module>
     </modules>
 </project>

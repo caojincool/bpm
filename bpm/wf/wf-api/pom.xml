@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>wf-api</artifactId>
+    
     <description>流程引擎模API</description>
     <dependencies>
         <dependency>

@@ -6,16 +6,8 @@ import java.util.List;
 import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
-public abstract interface BusinessColumnDao
-  extends BaseDao<String, BusinessColumn>
-{
-  public abstract void removeByTableId(String paramString);
-  
-  public abstract List<BusinessColumn> getByTableId(String paramString);
+public interface BusinessColumnDao extends BaseDao<String, BusinessColumn> {
+	public void removeByTableId(String var1);
+
+	public List<BusinessColumn> getByTableId(String var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\bus-core\1.1.5\bus-core-1.1.5-pg.jar!\com\dstz\bus\dao\BusinessColumnDao.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

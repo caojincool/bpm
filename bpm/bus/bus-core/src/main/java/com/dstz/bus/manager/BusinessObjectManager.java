@@ -5,18 +5,10 @@ import com.dstz.base.manager.Manager;
 import com.dstz.bus.model.BusinessObject;
 import java.util.List;
 
-public abstract interface BusinessObjectManager
-  extends Manager<String, BusinessObject>
-{
-  public abstract BusinessObject getByKey(String paramString);
-  
-  public abstract List<JSONObject> boTreeData(String paramString);
-  
-  public abstract BusinessObject getFilledByKey(String paramString);
+public interface BusinessObjectManager extends Manager<String, BusinessObject> {
+	public BusinessObject getByKey(String var1);
+
+	public List<JSONObject> boTreeData(String var1);
+
+	public BusinessObject getFilledByKey(String var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\bus-core\1.1.5\bus-core-1.1.5-pg.jar!\com\dstz\bus\manager\BusinessObjectManager.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

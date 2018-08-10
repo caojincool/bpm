@@ -3,19 +3,12 @@ package com.dstz.bus.service;
 import com.dstz.bus.model.BusinessData;
 import com.dstz.bus.model.BusinessObject;
 
-public abstract interface BusinessDataPersistenceService
-{
-  public abstract String type();
-  
-  public abstract void saveData(BusinessData paramBusinessData);
-  
-  public abstract BusinessData loadData(BusinessObject paramBusinessObject, Object paramObject);
-  
-  public abstract void removeData(BusinessObject paramBusinessObject, Object paramObject);
+public interface BusinessDataPersistenceService {
+	String type();
+
+	void saveData(BusinessData var1);
+
+	BusinessData loadData(BusinessObject var1, Object var2);
+
+	void removeData(BusinessObject var1, Object var2);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\bus-core\1.1.5\bus-core-1.1.5-pg.jar!\com\dstz\bus\service\BusinessDataPersistenceService.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */
