@@ -8,22 +8,15 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
-public abstract interface TaskIdentityLinkDao
-  extends BaseDao<String, TaskIdentityLink>
-{
-  public abstract void removeByInstanceId(String paramString);
-  
-  public abstract void removeByTaskId(String paramString);
-  
-  public abstract void bulkCreate(List<TaskIdentityLink> paramList);
-  
-  public abstract int checkUserOperatorPermission(@Param("rights") Set<String> paramSet, @Param("taskId") String paramString1, @Param("instanceId") String paramString2);
-  
-  public abstract List<TaskIdentityLink> getByTaskId(String paramString);
+public interface TaskIdentityLinkDao extends BaseDao<String, TaskIdentityLink> {
+	public void removeByInstanceId(String var1);
+
+	public void removeByTaskId(String var1);
+
+	public void bulkCreate(List<TaskIdentityLink> var1);
+
+	public int checkUserOperatorPermission(@Param(value = "rights") Set<String> var1,
+			@Param(value = "taskId") String var2, @Param(value = "instanceId") String var3);
+
+	public List<TaskIdentityLink> getByTaskId(String var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\core\dao\TaskIdentityLinkDao.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

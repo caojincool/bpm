@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusColumnCtrlManagerImpl extends BaseManager<String, BusColumnCtrl> implements BusColumnCtrlManager {
 	@Resource
-	private BusColumnCtrlDao e;
+	private BusColumnCtrlDao busColumnCtrlDao;
 
 	public void removeByTableId(String tableId) {
-		this.e.removeByTableId(tableId);
+		this.busColumnCtrlDao.removeByTableId(tableId);
 	}
 
 	public BusColumnCtrl getByColumnId(String columnId) {
-		return this.e.getByColumnId(columnId);
+		return this.busColumnCtrlDao.getByColumnId(columnId);
 	}
 }

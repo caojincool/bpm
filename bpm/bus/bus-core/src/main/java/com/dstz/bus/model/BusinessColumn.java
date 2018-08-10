@@ -7,9 +7,7 @@ import com.dstz.base.api.model.IBaseModel;
 import com.dstz.base.core.util.StringUtil;
 import com.dstz.base.core.util.time.DateFormatUtil;
 import com.dstz.base.db.model.table.Column;
-import com.dstz.bus.api.model.IBusColumnCtrl;
 import com.dstz.bus.api.model.IBusinessColumn;
-import com.dstz.bus.api.model.IBusinessTable;
 import com.dstz.bus.model.BusColumnCtrl;
 import com.dstz.bus.model.BusinessTable;
 import java.math.BigDecimal;
@@ -19,15 +17,23 @@ import javax.validation.Valid;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class BusinessColumn extends Column implements IBaseModel, IBusinessColumn {
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = -2911889790695856709L;
+	
+	
 	@NotEmpty
 	private String id;
 	@NotEmpty
 	private String key;
 	@NotEmpty
-	private String y;
+	private String tableId;
 	@Valid
-	private BusColumnCtrl z;
-	private BusinessTable v;
+	private BusColumnCtrl ctrl;
+	private BusinessTable table;
 
 	public String getId() {
 		return this.id;
@@ -46,27 +52,27 @@ public class BusinessColumn extends Column implements IBaseModel, IBusinessColum
 	}
 
 	public BusColumnCtrl getCtrl() {
-		return this.z;
+		return this.ctrl;
 	}
 
 	public void setCtrl(BusColumnCtrl ctrl) {
-		this.z = ctrl;
+		this.ctrl = ctrl;
 	}
 
 	public String getTableId() {
-		return this.y;
+		return this.tableId;
 	}
 
 	public void setTableId(String tableId) {
-		this.y = tableId;
+		this.tableId = tableId;
 	}
 
 	public BusinessTable getTable() {
-		return this.v;
+		return this.table;
 	}
 
 	public void setTable(BusinessTable table) {
-		this.v = table;
+		this.table = table;
 	}
 
 	public Object initValue() {

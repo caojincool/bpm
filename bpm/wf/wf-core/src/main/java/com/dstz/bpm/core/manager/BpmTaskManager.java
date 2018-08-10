@@ -5,22 +5,14 @@ import com.dstz.base.manager.Manager;
 import com.dstz.bpm.core.model.BpmTask;
 import java.util.List;
 
-public abstract interface BpmTaskManager
-  extends Manager<String, BpmTask>
-{
-  public abstract List<BpmTask> getByInstIdNodeId(String paramString1, String paramString2);
-  
-  public abstract List<BpmTask> getByInstId(String paramString);
-  
-  public abstract List<BpmTask> getTodoList(String paramString, QueryFilter paramQueryFilter);
-  
-  public abstract void assigneeTask(String paramString1, String paramString2, String paramString3);
-  
-  public abstract void unLockTask(String paramString);
+public interface BpmTaskManager extends Manager<String, BpmTask> {
+	public List<BpmTask> getByInstIdNodeId(String var1, String var2);
+
+	public List<BpmTask> getByInstId(String instanceId);
+
+	public List<BpmTask> getTodoList(String var1, QueryFilter queryFilter);
+
+	public void assigneeTask(String var1, String var2, String var3);
+
+	public void unLockTask(String var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\core\manager\BpmTaskManager.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

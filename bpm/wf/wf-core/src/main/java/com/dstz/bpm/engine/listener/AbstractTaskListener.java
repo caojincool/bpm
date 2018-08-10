@@ -1,104 +1,52 @@
- package com.dstz.bpm.engine.listener;
- 
- import com.dstz.bpm.act.listener.ActEventListener;
- import com.dstz.bpm.api.constant.EventType;
- import com.dstz.bpm.api.constant.ScriptType;
- import com.dstz.bpm.api.engine.action.cmd.TaskActionCmd;
- import com.dstz.bpm.api.engine.plugin.cmd.TaskCommand;
- import javax.annotation.Resource;
- import org.activiti.engine.delegate.event.ActivitiEntityEvent;
- import org.activiti.engine.delegate.event.ActivitiEvent;
- import org.activiti.engine.impl.persistence.entity.TaskEntity;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
- 
- 
- 
- 
- public abstract class AbstractTaskListener<T extends TaskActionCmd>
-   implements ActEventListener
- {
-   protected Logger LOG = LoggerFactory.getLogger(getClass());
-   
- 
- 
- 
-   @Resource
-   protected TaskCommand az;
-   
- 
- 
- 
- 
-   public abstract EventType getBeforeTriggerEventType();
-   
- 
- 
- 
- 
-   public abstract EventType getAfterTriggerEventType();
-   
- 
- 
- 
- 
-   public abstract void a(T paramT);
-   
- 
- 
- 
- 
-   public abstract void b(T paramT);
-   
- 
- 
- 
- 
-   public abstract void c(T paramT);
-   
- 
- 
- 
-   public void notify(ActivitiEvent event)
-   {
-     ActivitiEntityEvent entityEvent = (ActivitiEntityEvent)event;
-     TaskEntity taskEntity = (TaskEntity)entityEvent.getEntity();
-     
-     T model = a(taskEntity);
-     
- 
-     a(model);
-     
- 
- 
-     if (getBeforeTriggerEventType() != null) {
-       this.LOG.debug("============【{}】插件执行开始=============", getBeforeTriggerEventType().getValue());
-       this.az.execute(getBeforeTriggerEventType(), model);
-       this.LOG.debug("============【{}】插件执行完毕=============", getBeforeTriggerEventType().getValue());
-     }
-     
- 
-     b(model);
-     
- 
- 
-     if (getAfterTriggerEventType() != null) {
-       this.LOG.debug("============【{}】插件执行开始=============", getAfterTriggerEventType().getValue());
-       this.az.execute(getAfterTriggerEventType(), model);
-       this.LOG.debug("============【{}】插件执行完毕=============", getAfterTriggerEventType().getValue());
-     }
-     
- 
-     c(model);
-   }
-   
-   protected abstract ScriptType getScriptType();
-   
-   public abstract T a(TaskEntity paramTaskEntity);
- }
+package com.dstz.bpm.engine.listener;
 
+import com.dstz.bpm.act.listener.ActEventListener;
+import com.dstz.bpm.api.constant.EventType;
+import com.dstz.bpm.api.constant.ScriptType;
+import com.dstz.bpm.api.engine.action.cmd.TaskActionCmd;
+import com.dstz.bpm.api.engine.plugin.cmd.TaskCommand;
+import javax.annotation.Resource;
+import org.activiti.engine.delegate.event.ActivitiEntityEvent;
+import org.activiti.engine.delegate.event.ActivitiEvent;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\engine\listener\AbstractTaskListener.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */
+public abstract class AbstractTaskListener<T extends TaskActionCmd> implements ActEventListener {
+	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
+	@Resource
+	protected TaskCommand az;
+
+	public abstract EventType getBeforeTriggerEventType();
+
+	public abstract EventType getAfterTriggerEventType();
+
+	public abstract void a(T var1);
+
+	public abstract void b(T var1);
+
+	public abstract void c(T var1);
+
+	public void notify(ActivitiEvent event) {
+		ActivitiEntityEvent entityEvent = (ActivitiEntityEvent) event;
+		TaskEntity taskEntity = (TaskEntity) entityEvent.getEntity();
+		T model = this.a(taskEntity);
+		this.a(model);
+		if (this.getBeforeTriggerEventType() != null) {
+			this.LOG.debug("============【{}】插件执行开始=============", (Object) this.getBeforeTriggerEventType().getValue());
+			this.az.execute(this.getBeforeTriggerEventType(), model);
+			this.LOG.debug("============【{}】插件执行完毕=============", (Object) this.getBeforeTriggerEventType().getValue());
+		}
+		this.b(model);
+		if (this.getAfterTriggerEventType() != null) {
+			this.LOG.debug("============【{}】插件执行开始=============", (Object) this.getAfterTriggerEventType().getValue());
+			this.az.execute(this.getAfterTriggerEventType(), model);
+			this.LOG.debug("============【{}】插件执行完毕=============", (Object) this.getAfterTriggerEventType().getValue());
+		}
+		this.c(model);
+	}
+
+	protected abstract ScriptType getScriptType();
+
+	public abstract T a(TaskEntity var1);
+}

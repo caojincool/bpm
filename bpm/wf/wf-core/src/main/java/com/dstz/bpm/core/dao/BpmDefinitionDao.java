@@ -8,26 +8,19 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
-public abstract interface BpmDefinitionDao
-  extends BaseDao<String, BpmDefinition>
-{
-  public abstract BpmDefinition getMainByDefKey(String paramString);
-  
-  public abstract void updateActResourceEntity(@Param("deploymentId") String paramString1, @Param("resName") String paramString2, @Param("bpmnBytes") byte[] paramArrayOfByte);
-  
-  public abstract List<BpmDefinition> getByKey(String paramString);
-  
-  public abstract BpmDefinition getMainDefByActModelId(String paramString);
-  
-  public abstract BpmDefinition getByActDefId(String paramString);
-  
-  public abstract void updateToMain(String paramString);
-  
-  public abstract List<BpmDefinition> getMyDefinitionList(QueryFilter paramQueryFilter);
+public interface BpmDefinitionDao extends BaseDao<String, BpmDefinition> {
+	public BpmDefinition getMainByDefKey(String var1);
+
+	public void updateActResourceEntity(@Param(value = "deploymentId") String var1,
+			@Param(value = "resName") String var2, @Param(value = "bpmnBytes") byte[] var3);
+
+	public List<BpmDefinition> getByKey(String var1);
+
+	public BpmDefinition getMainDefByActModelId(String var1);
+
+	public BpmDefinition getByActDefId(String var1);
+
+	public void updateToMain(String var1);
+
+	public List<BpmDefinition> getMyDefinitionList(QueryFilter var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\core\dao\BpmDefinitionDao.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

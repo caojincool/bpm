@@ -55,7 +55,6 @@
                 <groupId>com.dstz.agilebpm</groupId>
                 <artifactId>bus-core</artifactId>
                 <version>${bpm.version}</version>
-                 <classifier>pg</classifier> 
             </dependency>
 
             <dependency>
@@ -91,14 +90,12 @@
             <dependency>
                 <groupId>com.dstz.agilebpm</groupId>
                 <artifactId>wf-core</artifactId>
-                <classifier>pg</classifier> 
                 <version>${bpm.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.dstz.agilebpm</groupId>
                 <artifactId>wf-act</artifactId>
-                <classifier>pg</classifier> 
                 <version>${bpm.version}</version>
             </dependency>
 

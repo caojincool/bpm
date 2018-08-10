@@ -15,58 +15,66 @@ import java.util.Map;
 import java.util.Set;
 
 public class BusinessPermission extends BaseModel implements IBusinessPermission {
-	private String G;
-	private String H;
-	private String I;
-	private Map<String, BusObjPermission> J = new HashMap<String, BusObjPermission>();
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = 3626757861344616318L;
+	
+	
+	private String objType;
+	private String objVal;
+	private String busObjMapJson;
+	private Map<String, BusObjPermission> busObjMap = new HashMap<String, BusObjPermission>();
 	private JSONObject K;
 	private JSONObject L = null;
 
 	public String getObjType() {
-		return this.G;
+		return this.objType;
 	}
 
 	public void setObjType(String objType) {
-		this.G = objType;
+		this.objType = objType;
 	}
 
 	public String getObjVal() {
-		return this.H;
+		return this.objVal;
 	}
 
 	public void setObjVal(String objVal) {
-		this.H = objVal;
+		this.objVal = objVal;
 	}
 
 	public String getBusObjMapJson() {
-		return this.I;
+		return this.busObjMapJson;
 	}
 
 	public void setBusObjMapJson(String busObjMapJson) {
-		this.I = busObjMapJson;
+		this.busObjMapJson = busObjMapJson;
 		if (StringUtil.isEmpty((String) busObjMapJson)) {
-			this.J = null;
+			this.busObjMap = null;
 			return;
 		}
-		this.J = new HashMap<String, BusObjPermission>();
-		Map map = (Map) JSONObject.parseObject((String) busObjMapJson, Map.class);
+		this.busObjMap = new HashMap<String, BusObjPermission>();
+		Map map = JSONObject.parseObject(busObjMapJson, Map.class);
 		for (Map.Entry entry : map.entrySet()) {
-			this.J.put((String) entry.getKey(), (BusObjPermission) JSONObject
+			this.busObjMap.put((String) entry.getKey(), (BusObjPermission) JSONObject
 					.parseObject((String) entry.getValue().toString(), BusObjPermission.class));
 		}
 	}
 
 	public Map<String, BusObjPermission> getBusObjMap() {
-		return this.J;
+		return this.busObjMap;
 	}
 
 	public void setBusObjMap(Map<String, BusObjPermission> busObjMap) {
-		this.J = busObjMap;
-		this.I = JsonUtil.toJSONString(busObjMap);
+		this.busObjMap = busObjMap;
+		this.busObjMapJson = JsonUtil.toJSONString(busObjMap);
 	}
 
 	public BusObjPermission c(String boKey) {
-		return this.J.get(boKey);
+		return this.busObjMap.get(boKey);
 	}
 
 	public JSONObject getTablePermission(boolean isReadonly) {

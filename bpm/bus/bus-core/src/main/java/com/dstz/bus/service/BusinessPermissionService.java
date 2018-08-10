@@ -22,9 +22,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessPermissionService implements IBusinessPermissionService {
 	@Autowired
-	BusinessPermissionManager T;
+	private BusinessPermissionManager T;
 	@Autowired
-	BusinessObjectManager k;
+	private BusinessObjectManager k;
 
 	public BusinessPermission a(String objType, String objVal, String defalutBoKeys, boolean calculate) {
 		BusinessPermission businessPermission = null;

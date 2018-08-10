@@ -98,7 +98,7 @@ public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable>
 	}
 
 	public BusinessTable getFilledByKey(String key) {
-		BusinessTable businessTable = BusinessTableCacheUtil.get((String) key);
+		BusinessTable businessTable = BusinessTableCacheUtil.get(key);
 		if (businessTable != null) {
 			return businessTable;
 		}

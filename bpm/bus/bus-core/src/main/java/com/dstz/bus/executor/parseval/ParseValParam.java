@@ -6,14 +6,14 @@ import java.util.Map;
 public class ParseValParam {
 	private String key;
 	private Object value;
-	private Map<String, Object> c;
-	private BusTableRel d;
+	private Map<String, Object> data;
+	private BusTableRel busTableRel;
 
 	public ParseValParam(String key, Object value, Map<String, Object> data, BusTableRel busTableRel) {
 		this.key = key;
 		this.value = value;
-		this.c = data;
-		this.d = busTableRel;
+		this.data = data;
+		this.busTableRel = busTableRel;
 	}
 
 	public String getKey() {
@@ -25,10 +25,10 @@ public class ParseValParam {
 	}
 
 	public Map<String, Object> getData() {
-		return this.c;
+		return this.data;
 	}
 
 	public BusTableRel getBusTableRel() {
-		return this.d;
+		return this.busTableRel;
 	}
 }

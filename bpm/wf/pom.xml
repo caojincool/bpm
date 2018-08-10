@@ -7,10 +7,10 @@
         <version>1.1.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>form</artifactId>
+    <artifactId>wf</artifactId>
     <packaging>pom</packaging>
-    <name>form</name>
-    <description>表单</description>
+    <name>wf</name>
+    <description>工作流</description>
 
     <modules>
         <module>wf-api</module>

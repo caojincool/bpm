@@ -7,6 +7,6 @@ import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
 public interface BusinessPermissionDao extends BaseDao<String, BusinessPermission> {
-	public BusinessPermission getByObjTypeAndObjVal(@Param(value = "objType") String var1,
-			@Param(value = "objVal") String var2);
+	public BusinessPermission getByObjTypeAndObjVal(@Param(value = "objType") String objType,
+			@Param(value = "objVal") String objVal);
 }

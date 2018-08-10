@@ -16,6 +16,12 @@ import java.util.Map;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, IBusinessTable {
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = 2712532453545121605L;
 	@NotEmpty
 	private String id;
 	@NotEmpty

@@ -6,7 +6,7 @@ import com.dstz.bus.model.BusinessObject;
 import java.util.List;
 
 public interface BusinessObjectManager extends Manager<String, BusinessObject> {
-	public BusinessObject getByKey(String var1);
+	public BusinessObject getByKey(String key);
 
 	public List<JSONObject> boTreeData(String var1);
 

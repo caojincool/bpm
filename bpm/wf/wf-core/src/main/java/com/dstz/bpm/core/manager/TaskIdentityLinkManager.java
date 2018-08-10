@@ -7,26 +7,18 @@ import com.dstz.sys.api.model.SysIdentity;
 import java.util.List;
 import java.util.Set;
 
-public abstract interface TaskIdentityLinkManager
-  extends Manager<String, TaskIdentityLink>
-{
-  public abstract void removeByTaskId(String paramString);
-  
-  public abstract void bulkCreate(List<TaskIdentityLink> paramList);
-  
-  public abstract void removeByInstanceId(String paramString);
-  
-  public abstract Boolean checkUserOperatorPermission(String paramString1, String paramString2, String paramString3);
-  
-  public abstract void createIdentityLink(IBpmTask paramIBpmTask, List<SysIdentity> paramList);
-  
-  public abstract Set<String> getUserRights(String paramString);
-  
-  public abstract List<TaskIdentityLink> getByTaskId(String paramString);
+public interface TaskIdentityLinkManager extends Manager<String, TaskIdentityLink> {
+	public void removeByTaskId(String var1);
+
+	public void bulkCreate(List<TaskIdentityLink> var1);
+
+	public void removeByInstanceId(String var1);
+
+	public Boolean checkUserOperatorPermission(String var1, String var2, String var3);
+
+	public void createIdentityLink(IBpmTask var1, List<SysIdentity> var2);
+
+	public Set<String> getUserRights(String var1);
+
+	public List<TaskIdentityLink> getByTaskId(String var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\core\manager\TaskIdentityLinkManager.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

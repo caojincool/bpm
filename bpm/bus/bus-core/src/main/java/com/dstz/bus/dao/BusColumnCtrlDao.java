@@ -6,7 +6,8 @@ import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
 public interface BusColumnCtrlDao extends BaseDao<String, BusColumnCtrl> {
-	public void removeByTableId(String var1);
 
-	public BusColumnCtrl getByColumnId(String var1);
+	public void removeByTableId(String tableId);
+
+	public BusColumnCtrl getByColumnId(String columnId);
 }

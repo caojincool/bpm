@@ -4,19 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.dstz.bus.model.BusinessData;
 
 public class AssemblyValParam {
-	private JSONObject a;
-	private BusinessData b;
+	private JSONObject data;
+	private BusinessData businessData;
 
 	public AssemblyValParam(JSONObject data, BusinessData businessData) {
-		this.a = data;
-		this.b = businessData;
+		this.data = data;
+		this.businessData = businessData;
 	}
 
 	public JSONObject getData() {
-		return this.a;
+		return this.data;
 	}
 
 	public BusinessData getBusinessData() {
-		return this.b;
+		return this.businessData;
 	}
 }

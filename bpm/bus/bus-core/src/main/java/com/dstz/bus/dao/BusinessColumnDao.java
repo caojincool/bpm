@@ -7,7 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
 public interface BusinessColumnDao extends BaseDao<String, BusinessColumn> {
-	public void removeByTableId(String var1);
+	public void removeByTableId(String tableId);
 
-	public List<BusinessColumn> getByTableId(String var1);
+	public List<BusinessColumn> getByTableId(String tableId);
 }

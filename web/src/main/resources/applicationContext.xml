@@ -27,6 +27,4 @@
     
 	<!-- 整合activiti -->
     <import resource="conf/bpm-core.xml"/>
-
-
 </beans> 

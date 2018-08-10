@@ -1,29 +1,24 @@
- package com.dstz.bpm.engine.parser.flow;
- 
- import com.dstz.bpm.api.model.form.DefaultForm;
- import com.dstz.bpm.engine.model.DefaultBpmProcessDef;
- import org.springframework.stereotype.Component;
- 
- 
- @Component
- public class GlobalMobileFormParse
-   extends AbsFlowParse<DefaultForm>
- {
-   public String getKey()
-   {
-     return "globalMobileForm";
-   }
-   
- 
-   public void a(DefaultBpmProcessDef bpmProcessDef, Object object)
-   {
-     DefaultForm form = (DefaultForm)object;
-     bpmProcessDef.setGlobalMobileForm(form);
-   }
- }
+package com.dstz.bpm.engine.parser.flow;
 
+import com.dstz.bpm.api.engine.plugin.def.BpmDef;
+import com.dstz.bpm.api.model.form.BpmForm;
+import com.dstz.bpm.api.model.form.DefaultForm;
+import com.dstz.bpm.engine.model.DefaultBpmProcessDef;
+import com.dstz.bpm.engine.parser.flow.AbsFlowParse;
+import org.springframework.stereotype.Component;
 
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\engine\parser\flow\GlobalMobileFormParse.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */
+@Component
+public class GlobalMobileFormParse extends AbsFlowParse<DefaultForm> {
+	public String getKey() {
+		return "globalMobileForm";
+	}
+
+	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+		DefaultForm form = (DefaultForm) object;
+		bpmProcessDef.setGlobalMobileForm((BpmForm) form);
+	}
+
+	public void setDefParam(BpmDef bpmDef, Object object) {
+		this.a((DefaultBpmProcessDef) bpmDef, object);
+	}
+}

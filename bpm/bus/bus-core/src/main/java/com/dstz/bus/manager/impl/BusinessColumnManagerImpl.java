@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessColumnManagerImpl extends BaseManager<String, BusinessColumn> implements BusinessColumnManager {
 	@Resource
-	BusinessColumnDao f;
+	private BusinessColumnDao businessColumnDao;
 
 	public void removeByTableId(String tableId) {
-		this.f.removeByTableId(tableId);
+		this.businessColumnDao.removeByTableId(tableId);
 	}
 
 	public List<BusinessColumn> getByTableId(String tableId) {
-		return this.f.getByTableId(tableId);
+		return this.businessColumnDao.getByTableId(tableId);
 	}
 }

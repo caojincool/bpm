@@ -31,9 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BusinessDataPersistenceDbService implements BusinessDataPersistenceService {
 	@Autowired
-	BusinessTableManager h;
+	private BusinessTableManager h;
 	@Autowired
-	BusinessObjectManager k;
+	private BusinessObjectManager k;
 
 	public String type() {
 		return BusinessObjectPersistenceType.DB.getKey();

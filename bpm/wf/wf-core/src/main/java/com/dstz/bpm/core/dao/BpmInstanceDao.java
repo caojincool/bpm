@@ -8,16 +8,8 @@ import java.util.List;
 import org.mybatis.spring.annotation.MapperScan;
 
 @MapperScan
-public abstract interface BpmInstanceDao
-  extends BaseDao<String, BpmInstance>
-{
-  public abstract List<BpmInstance> getApplyList(QueryFilter paramQueryFilter);
-  
-  public abstract List<BpmTaskApprove> getApproveHistoryList(QueryFilter paramQueryFilter);
+public interface BpmInstanceDao extends BaseDao<String, BpmInstance> {
+	public List<BpmInstance> getApplyList(QueryFilter var1);
+
+	public List<BpmTaskApprove> getApproveHistoryList(QueryFilter var1);
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\core\dao\BpmInstanceDao.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */

@@ -5,11 +5,13 @@ import com.dstz.base.manager.Manager;
 import com.dstz.bus.model.BusinessTable;
 
 public interface BusinessTableManager extends Manager<String, BusinessTable> {
-	void save(BusinessTable var1);
+	
+	
+	void save(BusinessTable businessTable);
 
-	BusinessTable getByKey(String var1);
+	BusinessTable getByKey(String key);
 
-	BusinessTable getFilledByKey(String var1);
+	BusinessTable getFilledByKey(String key);
 
-	TableOperator newTableOperator(BusinessTable var1);
+	TableOperator newTableOperator(BusinessTable businessTable);
 }

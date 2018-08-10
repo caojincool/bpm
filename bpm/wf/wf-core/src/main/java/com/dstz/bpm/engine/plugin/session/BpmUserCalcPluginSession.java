@@ -1,17 +1,10 @@
 package com.dstz.bpm.engine.plugin.session;
 
 import com.dstz.bpm.api.model.task.IBpmTask;
+import com.dstz.bpm.engine.plugin.session.BpmPluginSession;
 
-public abstract interface BpmUserCalcPluginSession
-  extends BpmPluginSession
-{
-  public abstract Boolean isPreVrewModel();
-  
-  public abstract IBpmTask getBpmTask();
+public interface BpmUserCalcPluginSession extends BpmPluginSession {
+	public Boolean isPreVrewModel();
+
+	public IBpmTask getBpmTask();
 }
-
-
-/* Location:              E:\repo\com\dstz\agilebpm\wf-core\1.1.5\wf-core-1.1.5-pg.jar!\com\dstz\bpm\engine\plugin\session\BpmUserCalcPluginSession.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       0.7.1
- */
