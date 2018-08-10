@@ -12,6 +12,7 @@
         <module>base</module>
         <module>platform</module> 
         <module>web</module>
+        <module>bpm</module>
     </modules>
 
     <!-- deploy 服务器 -->

@@ -8,18 +8,14 @@
         <version>1.1.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>bus-rest</artifactId>
+    <artifactId>bus-core</artifactId>
     <name>bus-rest</name>
     <dependencies>
         <dependency>
             <groupId>com.dstz.agilebpm</groupId>
             <artifactId>base-rest</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.dstz.agilebpm</groupId>
-            <artifactId>bus-core</artifactId>
-            <classifier>pg</classifier> 
-        </dependency>
+        
 
     </dependencies>
 </project>

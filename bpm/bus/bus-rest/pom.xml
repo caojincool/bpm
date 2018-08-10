@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.dstz.agilebpm</groupId>
             <artifactId>bus-core</artifactId>
-            <classifier>pg</classifier> 
+          <!--  <classifier>pg</classifier> -->
         </dependency>
 
     </dependencies>

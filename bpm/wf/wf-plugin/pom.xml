@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.dstz.agilebpm</groupId>
-        <artifactId>bus</artifactId>
+        <artifactId>wf</artifactId>
         <version>1.1.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.dstz.agilebpm</groupId>
-    <artifactId>bus-api</artifactId>
+    <artifactId>wf-plugin</artifactId>
     <name>bus-api</name>
     <dependencies>
         <dependency>
