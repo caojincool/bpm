@@ -31,7 +31,7 @@ public class ScriptPluginContext extends AbstractUserCalcPluginContext<ScriptPlu
 		return "脚本";
 	}
 
-	protected ScriptPluginDef c(JSONObject pluginJson) {
+	protected ScriptPluginDef parseJson(JSONObject pluginJson) {
 		ScriptPluginDef def = new ScriptPluginDef();
 		String script = pluginJson.getString("script");
 		String description = JsonUtil.getString((JSONObject) pluginJson, (String) "description", (String) "脚本");
@@ -40,7 +40,7 @@ public class ScriptPluginContext extends AbstractUserCalcPluginContext<ScriptPlu
 		return def;
 	}
 
-	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
-		return this.c(jSONObject);
-	}
+//	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
+//		return this.c(jSONObject);
+//	}
 }

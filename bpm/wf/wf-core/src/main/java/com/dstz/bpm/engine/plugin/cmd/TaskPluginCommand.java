@@ -42,8 +42,8 @@ public class TaskPluginCommand implements TaskCommand {
 				.buildTaskPluginSession((TaskActionCmd) actionModel, (EventType) eventType);
 		DefaultBpmExecutionPluginSession executionSession = BpmPluginSessionFactory
 				.buildExecutionPluginSession((TaskActionCmd) actionModel, (EventType) eventType);
-		for (Object bpmPluginContext : bpmNodeDef.getBpmPluginContexts()) {
-			if (BeanUtils.isEmpty((Object) bpmPluginContext.getEventTypes()))
+		for (BpmPluginContext bpmPluginContext : bpmNodeDef.getBpmPluginContexts()) {
+			if (BeanUtils.isEmpty(bpmPluginContext.getEventTypes()))
 				continue;
 			BpmPluginDef bpmPluginDef = bpmPluginContext.getBpmPluginDef();
 			if (bpmPluginDef instanceof BpmTaskPluginDef) {

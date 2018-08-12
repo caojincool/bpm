@@ -59,15 +59,15 @@ public class BpmBusDataHandle {
 
 	public Map<String, IBusinessData> a(IBusinessPermission businessPermision, BpmInstance instance) {
 		IBusinessData busData;
-		Object businessObject;
+		IBusinessObject businessObject;
 		HashMap<String, IBusinessData> dataMap = new HashMap<String, IBusinessData>();
 		BpmInstance topInstance = this.f.getTopInstance(instance);
 		if (topInstance != null) {
-			List topInstanceBusLinks = this.aG.getByInstanceId(topInstance.getId());
+			List<BpmBusLink> topInstanceBusLinks = this.aG.getByInstanceId(topInstance.getId());
 			for (BpmBusLink busLink : topInstanceBusLinks) {
 				businessObject = this.businessObjectService.getFilledByKey(busLink.getBizCode());
 				businessObject.setPermission(businessPermision.getBusObj(busLink.getBizCode()));
-				busData = this.au.loadData((IBusinessObject) businessObject, (Object) busLink.getBizId());
+				busData = this.au.loadData(businessObject, busLink.getBizId());
 				if (busData == null) {
 					throw new SystemException(
 							String.format("bizCode[%s] bizId[%s]", busLink.getBizCode(), busLink.getBizId()),
@@ -76,7 +76,7 @@ public class BpmBusDataHandle {
 				dataMap.put(busLink.getBizCode(), busData);
 			}
 		}
-		List busLinks = this.aG.getByInstanceId(instance.getId());
+		List<BpmBusLink> busLinks = this.aG.getByInstanceId(instance.getId());
 		for (BpmBusLink busLink : busLinks) {
 			businessObject = this.businessObjectService.getFilledByKey(busLink.getBizCode());
 			businessObject.setPermission(businessPermision.getBusObj(busLink.getBizCode()));
@@ -89,7 +89,7 @@ public class BpmBusDataHandle {
 			dataMap.put(busLink.getBizCode(), busData);
 		}
 		DefaultBpmProcessDef processDef = (DefaultBpmProcessDef) this.a.getBpmProcessDef(instance.getDefId());
-		List listDataModel = processDef.getDataModelList();
+		List<BpmDataModel> listDataModel = processDef.getDataModelList();
 		for (BpmDataModel model : listDataModel) {
 			String code = model.getCode();
 			if (dataMap.containsKey(code))
@@ -105,7 +105,7 @@ public class BpmBusDataHandle {
 	public Map<String, IBusinessData> a(IBusinessPermission businessPermision, String defId) {
 		HashMap<String, IBusinessData> dataMap = new HashMap<String, IBusinessData>();
 		DefaultBpmProcessDef processDef = (DefaultBpmProcessDef) this.a.getBpmProcessDef(defId);
-		List listDataModel = processDef.getDataModelList();
+		List<BpmDataModel> listDataModel = processDef.getDataModelList();
 		for (BpmDataModel model : listDataModel) {
 			String code = model.getCode();
 			IBusinessObject businessObject = this.businessObjectService.getFilledByKey(code);
@@ -168,7 +168,7 @@ public class BpmBusDataHandle {
 		busLink.setInstId(instance.getId());
 		busLink.setDefId(instance.getDefId());
 		this.b(modelCode);
-		this.aG.create((Object) busLink);
+		this.aG.create(busLink);
 	}
 
 	private void b(String partName) {

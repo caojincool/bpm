@@ -37,7 +37,7 @@ public class NodeMessagePluginContext extends AbstractBpmExecutionPluginContext<
 		return NodeMessagePlugin.class;
 	}
 
-	protected NodeMessagePluginDef a(JSON pluginJson) {
+	protected NodeMessagePluginDef parseFromJson(JSON pluginJson) {
 		JSONArray array = (JSONArray) pluginJson;
 		ArrayList<NodeMessage> messageList = new ArrayList<NodeMessage>();
 		for (int i = 0; i < array.size(); ++i) {
@@ -58,7 +58,4 @@ public class NodeMessagePluginContext extends AbstractBpmExecutionPluginContext<
 		return "节点消息";
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.a(jSON);
-	}
 }

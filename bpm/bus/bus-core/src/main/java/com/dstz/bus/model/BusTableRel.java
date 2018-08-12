@@ -5,25 +5,40 @@ import com.dstz.bus.api.model.IBusTableRel;
 import com.dstz.bus.api.model.IBusinessObject;
 import com.dstz.bus.api.model.IBusinessTable;
 import com.dstz.bus.model.BusTableRelFk;
-import com.dstz.bus.model.BusinessObject;
-import com.dstz.bus.model.BusinessTable;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class BusTableRel implements IBusTableRel, Serializable {
-	private List<BusTableRel> children;
-	private String s;
-	private String t;
+	
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = -9105853169718466190L;
+	
+	
+	private List<IBusTableRel> children;
+	private String tableKey;
+	private String tableComment;
 	private String type;
-	private List<BusTableRelFk> u;
-	private BusinessTable v;
-	private BusTableRel w;
-	private BusinessObject x;
+	private List<BusTableRelFk> fks;
+	private IBusinessTable table;
+	private IBusTableRel parent;
+	private IBusinessObject busObj;
 
-	public List<BusTableRel> getChildren() {
+	
+	/**
+	 * <pre>
+	 * 子级
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
+	public List<IBusTableRel> getChildren() {
 		if (this.children == null) {
 			return Collections.emptyList();
 		}
@@ -31,9 +46,9 @@ public class BusTableRel implements IBusTableRel, Serializable {
 	}
 
 	public List<IBusTableRel> getChildren(String type) {
-		ArrayList<IBusTableRel> list = new ArrayList<IBusTableRel>();
+		List<IBusTableRel> list = new ArrayList<IBusTableRel>();
 		if (BeanUtils.isNotEmpty(this.children)) {
-			for (BusTableRel rel : this.children) {
+			for (IBusTableRel rel : this.children) {
 				if (!type.equals(rel.getType()))
 					continue;
 				list.add(rel);
@@ -42,26 +57,50 @@ public class BusTableRel implements IBusTableRel, Serializable {
 		return list;
 	}
 
-	public void setChildren(List<BusTableRel> children) {
+	public void setChildren(List<IBusTableRel> children) {
 		this.children = children;
 	}
 
+	/**
+	 * <pre>
+	 * 业务表的key
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public String getTableKey() {
-		return this.s;
+		return this.tableKey;
 	}
 
 	public void setTableKey(String tableKey) {
-		this.s = tableKey;
+		this.tableKey = tableKey;
 	}
 
+	/**
+	 * <pre>
+	 * 业务表的描述
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public String getTableComment() {
-		return this.t;
+		return this.tableComment;
 	}
 
 	public void setTableComment(String tableComment) {
-		this.t = tableComment;
+		this.tableComment = tableComment;
 	}
 
+	/**
+	 * <pre>
+	 * 类型 枚举 BusTableRelType
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public String getType() {
 		return this.type;
 	}
@@ -69,66 +108,90 @@ public class BusTableRel implements IBusTableRel, Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	
+	/**
+	 * <pre>
+	 * 外键设置
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public List<BusTableRelFk> getFks() {
-		return this.u;
+		return this.fks;
 	}
 
 	public void setFks(List<BusTableRelFk> fks) {
-		this.u = fks;
+		this.fks = fks;
 	}
 
-	public BusTableRel a(String tableKey) {
-		if (this.s.equals(tableKey)) {
-			return this;
-		}
-		if (this.children != null) {
-			for (BusTableRel rel : this.children) {
-				BusTableRel r = rel.a(tableKey);
-				if (r == null)
-					continue;
-				return r;
-			}
-		}
-		return null;
-	}
-
-	public List<BusTableRel> list() {
-		ArrayList<BusTableRel> rels = new ArrayList<BusTableRel>();
+	/**
+	 * <pre>
+	 * 获取busTableRel的list模式
+	 * 包含根节点
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
+	public List<IBusTableRel> list() {
+		ArrayList<IBusTableRel> rels = new ArrayList<IBusTableRel>();
 		rels.add(this);
 		if (this.children != null) {
-			for (BusTableRel rel : this.children) {
+			for (IBusTableRel rel : this.children) {
 				rels.addAll(rel.list());
 			}
 		}
 		return rels;
 	}
 
-	public BusinessTable getTable() {
-		return this.v;
+	@Override
+	public IBusinessTable getTable() {
+		return this.table;
 	}
 
-	public void setTable(BusinessTable table) {
-		this.v = table;
+	public void setTable(IBusinessTable table) {
+		this.table = table;
 	}
 
-	public BusTableRel getParent() {
-		return this.w;
+	public IBusTableRel getParent() {
+		return this.parent;
 	}
 
-	public void setParent(BusTableRel parent) {
-		this.w = parent;
+	public void setParent(IBusTableRel parent) {
+		this.parent = parent;
 	}
 
-	public BusinessObject getBusObj() {
-		return this.x;
+	public IBusinessObject getBusObj() {
+		return this.busObj;
 	}
 
-	public void setBusObj(BusinessObject busObj) {
-		this.x = busObj;
+	public void setBusObj(IBusinessObject busObj) {
+		this.busObj = busObj;
 	}
 
-	public IBusTableRel find(String string) {
-		return this.a(string);
+	
+	/**
+	 * <pre>
+	 * 以当前为根节点，递归获取指定tableKey
+	 * </pre>
+	 * 
+	 * @param tableKey
+	 * @return
+	 */
+	@Override
+	public IBusTableRel find(String tableKey) {
+		if (this.tableKey.equals(tableKey)) {
+			return this;
+		}
+		if (this.children != null) {
+			for (IBusTableRel rel : this.children) {
+				IBusTableRel r = rel.find(tableKey);
+				if (r == null)
+					continue;
+				return r;
+			}
+		}
+		return null;
 	}
 }

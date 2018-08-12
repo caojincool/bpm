@@ -36,7 +36,7 @@ public class BpmTaskStackManagerImpl extends BaseManager<String, BpmTaskStack> i
 			stack.setPath(parentStack.getPath() + id + ".");
 			stack.setParentId(parentStack.getId());
 		}
-		this.create((Serializable) stack);
+		this.create(stack);
 		return stack;
 	}
 

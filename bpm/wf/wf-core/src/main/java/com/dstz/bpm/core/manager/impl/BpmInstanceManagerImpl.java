@@ -40,7 +40,7 @@ public class BpmInstanceManagerImpl extends BaseManager<String, BpmInstance> imp
 		if (instance == null || StringUtil.isZeroEmpty((String) instance.getParentInstId())) {
 			return null;
 		}
-		BpmInstance parentInstance = (BpmInstance) this.get((Serializable) ((Object) instance.getParentInstId()));
+		BpmInstance parentInstance = (BpmInstance) this.get(instance.getParentInstId());
 		BpmInstance topInstance = this.getTopInstance(parentInstance);
 		if (topInstance != null) {
 			return topInstance;

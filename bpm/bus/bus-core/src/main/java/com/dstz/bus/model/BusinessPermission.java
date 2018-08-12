@@ -52,15 +52,14 @@ public class BusinessPermission extends BaseModel implements IBusinessPermission
 
 	public void setBusObjMapJson(String busObjMapJson) {
 		this.busObjMapJson = busObjMapJson;
-		if (StringUtil.isEmpty((String) busObjMapJson)) {
+		if (StringUtil.isEmpty(busObjMapJson)) {
 			this.busObjMap = null;
 			return;
 		}
 		this.busObjMap = new HashMap<String, BusObjPermission>();
-		Map map = JSONObject.parseObject(busObjMapJson, Map.class);
-		for (Map.Entry entry : map.entrySet()) {
-			this.busObjMap.put((String) entry.getKey(), (BusObjPermission) JSONObject
-					.parseObject((String) entry.getValue().toString(), BusObjPermission.class));
+		Map<String, String> map = JSONObject.parseObject(busObjMapJson, Map.class);
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			this.busObjMap.put(entry.getKey(), JSONObject.parseObject(entry.getValue(), BusObjPermission.class));
 		}
 	}
 

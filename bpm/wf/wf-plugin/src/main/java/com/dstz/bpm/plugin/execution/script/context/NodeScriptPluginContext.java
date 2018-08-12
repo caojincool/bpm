@@ -32,7 +32,7 @@ public class NodeScriptPluginContext extends AbstractBpmExecutionPluginContext<N
 		return NodeScriptPlugin.class;
 	}
 
-	protected NodeScriptPluginDef b(JSON pluginJson) {
+	protected NodeScriptPluginDef parseFromJson(JSON pluginJson) {
 		JSONObject jsonObject = (JSONObject) pluginJson;
 		NodeScriptPluginDef def = new NodeScriptPluginDef();
 		for (String key : jsonObject.keySet()) {
@@ -49,7 +49,4 @@ public class NodeScriptPluginContext extends AbstractBpmExecutionPluginContext<N
 		return "脚本";
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.b(jSON);
-	}
 }

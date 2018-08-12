@@ -13,12 +13,12 @@ public class MobileFormParse extends AbsNodeParse<DefaultForm> {
 		return "mobileForm";
 	}
 
-	public void a(BaseBpmNodeDef userNodeDef, Object object) {
+	public void setDefParam(BaseBpmNodeDef userNodeDef, Object object) {
 		DefaultForm form = (DefaultForm) object;
 		userNodeDef.setMobileForm((BpmForm) form);
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((BaseBpmNodeDef) bpmDef, object);
-	}
+//	public void setDefParam(BpmDef bpmDef, Object object) {
+//		this.a((BaseBpmNodeDef) bpmDef, object);
+//	}
 }

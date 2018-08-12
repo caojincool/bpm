@@ -32,16 +32,17 @@ public class TaskSaveActionHandler extends AbstractTaskActionHandler<DefualtTask
 	public Boolean isDefault() {
 		return true;
 	}
-
-	protected void i(BaseActionCmd baseActionCmd) {
-		this.d((DefualtTaskActionCmd) baseActionCmd);
+	@Override
+	protected void i(DefualtTaskActionCmd baseActionCmd) {
+		this.d(baseActionCmd);
+	}
+	@Override
+	protected void h(DefualtTaskActionCmd baseActionCmd) {
+		this.e(baseActionCmd);
 	}
 
-	protected void h(BaseActionCmd baseActionCmd) {
-		this.e((DefualtTaskActionCmd) baseActionCmd);
+	public void b(DefualtTaskActionCmd baseActionCmd) {
+		this.a(baseActionCmd);
 	}
 
-	public void b(BaseActionCmd baseActionCmd) {
-		this.a((DefualtTaskActionCmd) baseActionCmd);
-	}
 }

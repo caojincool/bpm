@@ -16,7 +16,7 @@ public class DefaultBpmUserCalcPluginSession extends DefaultBpmExecutionPluginSe
 	}
 
 	public void setBpmTask(IBpmTask bpmTask) {
-		this.put((Object) "bpmTask", (Object) bpmTask);
+		this.put("bpmTask", bpmTask);
 		this.ao = bpmTask;
 	}
 

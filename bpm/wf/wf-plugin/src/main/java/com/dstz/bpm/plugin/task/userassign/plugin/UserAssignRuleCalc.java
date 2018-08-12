@@ -45,7 +45,7 @@ public class UserAssignRuleCalc {
 			boolean isValid = UserAssignRuleCalc.a(userRule.getCondition(), bpmUserCalcPluginSession);
 			if (!isValid)
 				continue;
-			List calcList = userRule.getCalcPluginContextList();
+			List<UserCalcPluginContext> calcList = userRule.getCalcPluginContextList();
 			for (UserCalcPluginContext context : calcList) {
 				AbstractUserCalcPlugin plugin = (AbstractUserCalcPlugin) AppUtil
 						.getBean((Class) context.getPluginClass());

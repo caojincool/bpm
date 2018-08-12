@@ -12,12 +12,9 @@ public class NodePropertiesParse extends AbsNodeParse<NodeProperties> {
 		return "propertie";
 	}
 
-	public void a(BaseBpmNodeDef userNodeDef, Object object) {
+	public void setDefParam(BaseBpmNodeDef userNodeDef, Object object) {
 		NodeProperties prop = (NodeProperties) object;
 		userNodeDef.setNodeProperties(prop);
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((BaseBpmNodeDef) bpmDef, object);
-	}
 }

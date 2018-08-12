@@ -21,6 +21,8 @@ import com.dstz.bpm.core.model.BpmTaskStack;
 import com.dstz.bpm.engine.action.cmd.DefualtTaskActionCmd;
 import com.dstz.bpm.engine.action.handler.task.AbstractTaskActionHandler;
 import com.dstz.bpm.engine.model.BpmIdentity;
+import com.dstz.sys.api.model.SysIdentity;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +56,14 @@ public class TaskRejectActionHandler extends AbstractTaskActionHandler<DefualtTa
 
 	private void a(DefualtTaskActionCmd actionModel, String destinationNode) {
 		BpmIdentity identitys = null;
-		List taskOpinions = this.aB.getByInstAndNode(actionModel.getInstanceId(), actionModel.getBpmTask().getNodeId());
+		List<BpmTaskOpinion> taskOpinions = this.aB.getByInstAndNode(actionModel.getInstanceId(), actionModel.getBpmTask().getNodeId());
 		for (BpmTaskOpinion opinion : taskOpinions) {
 			if (!StringUtil.isNotEmpty((String) opinion.getApprover()))
 				continue;
 			identitys = new BpmIdentity(opinion.getApprover(), opinion.getApproverName(), "user");
 		}
 		if (identitys != null) {
-			ArrayList<BpmIdentity> list = new ArrayList<BpmIdentity>();
+			ArrayList<SysIdentity> list = new ArrayList<SysIdentity>();
 			list.add(identitys);
 			actionModel.setBpmIdentity(destinationNode, list);
 		}
@@ -78,7 +80,7 @@ public class TaskRejectActionHandler extends AbstractTaskActionHandler<DefualtTa
 		if (StringUtil.isZeroEmpty((String) stack.getParentId())) {
 			throw new WorkFlowException((IStatusCode) BpmStatusCode.NO_BACK_TARGET);
 		}
-		BpmTaskStack preStack = (BpmTaskStack) this.aA.get((Serializable) ((Object) stack.getParentId()));
+		BpmTaskStack preStack = (BpmTaskStack) this.aA.get(stack.getParentId());
 		if (preStack == null) {
 			throw new WorkFlowException("上一步任务执行堆栈信息查找失败！", (IStatusCode) BpmStatusCode.NO_BACK_TARGET);
 		}
@@ -89,7 +91,7 @@ public class TaskRejectActionHandler extends AbstractTaskActionHandler<DefualtTa
 		NodeProperties nodeProperties = this.a.getBpmNodeDef(actionModel.getDefId(), actionModel.getNodeId())
 				.getNodeProperties();
 		if ("back".equals(nodeProperties.getBackMode())) {
-			List tasks = this.ay.getByInstIdNodeId(actionModel.getInstanceId(), actionModel.getNodeId());
+			List<BpmTask> tasks = this.ay.getByInstIdNodeId(actionModel.getInstanceId(), actionModel.getNodeId());
 			if (BeanUtils.isEmpty((Object) tasks)) {
 				throw new WorkFlowException("任务返回节点标记失败，待标记任务查找不到", (IStatusCode) BpmStatusCode.NO_BACK_TARGET);
 			}
@@ -102,7 +104,7 @@ public class TaskRejectActionHandler extends AbstractTaskActionHandler<DefualtTa
 					throw new WorkFlowException("任务返回节点标记失败，期望查找一条，但是出现多条", (IStatusCode) BpmStatusCode.NO_BACK_TARGET);
 				}
 				task.setBackNode(actionModel.getNodeId());
-				this.ay.update((Object) task);
+				this.ay.update(task);
 				hasUpdated = true;
 			}
 			if (!hasUpdated) {
@@ -122,12 +124,13 @@ public class TaskRejectActionHandler extends AbstractTaskActionHandler<DefualtTa
 	public String getConfigPage() {
 		return "/bpm/task/taskOpinionDialog.html";
 	}
-
-	public void i(BaseActionCmd baseActionCmd) {
+	@Override
+	public void i(DefualtTaskActionCmd baseActionCmd) {
 		this.d((DefualtTaskActionCmd) baseActionCmd);
 	}
-
-	public void h(BaseActionCmd baseActionCmd) {
+	@Override
+	public void h(DefualtTaskActionCmd baseActionCmd) {
 		this.e((DefualtTaskActionCmd) baseActionCmd);
 	}
+
 }

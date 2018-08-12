@@ -22,18 +22,19 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 	
 	*/ 
 	private static final long serialVersionUID = 2712532453545121605L;
+	
 	@NotEmpty
 	private String id;
 	@NotEmpty
 	private String key;
 	@NotEmpty
-	private String M;
+	private String dsKey;
 	@NotEmpty
 	private String dsName;
 	private String groupId;
 	private String groupName;
-	private boolean N;
-	private boolean O;
+	private boolean external;
+	private boolean createdTable;
 
 	public String getId() {
 		return this.id;
@@ -43,6 +44,15 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 		this.id = id;
 	}
 
+	
+	/**
+	 * <pre>
+	 * 业务表的别名
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public String getKey() {
 		return this.key;
 	}
@@ -51,14 +61,32 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 		this.key = key;
 	}
 
+	
+	/**
+	 * <pre>
+	 * 数据源别名
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	
+	@Override
 	public String getDsKey() {
-		return this.M;
+		return this.dsKey;
 	}
 
 	public void setDsKey(String dsKey) {
-		this.M = dsKey;
+		this.dsKey = dsKey;
 	}
-
+	
+	
+	/**
+	 * <pre>
+	 * 数据源名称
+	 * </pre>
+	 * @return
+	 */
+	@Override
 	public String getDsName() {
 		return this.dsName;
 	}
@@ -84,48 +112,64 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 	}
 
 	public boolean isExternal() {
-		return this.N;
+		return this.external;
 	}
 
 	public void setExternal(boolean external) {
-		this.N = external;
+		this.external = external;
 	}
 
 	public String getPkName() {
 		if (this.getPkColumn() == null) {
 			return "";
 		}
-		return ((BusinessColumn) this.getPkColumn()).getName();
+		return this.getPkColumn().getName();
 	}
 
 	public String getPkKey() {
 		if (this.getPkColumn() == null) {
 			return "";
 		}
-		return ((BusinessColumn) this.getPkColumn()).getKey();
+		return  this.getPkColumn().getKey();
 	}
 
 	public void setColumns(List<BusinessColumn> columns) {
 		super.setColumns(columns);
 	}
-
+	
+	
+	/**
+	 * <pre>
+	 * 字段
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	@Override
 	public List<BusinessColumn> getColumns() {
 		return super.getColumns();
 	}
 
-	public boolean a() {
-		return this.O;
+	public boolean getCreatedTable() {
+		return this.createdTable;
 	}
 
 	public void setCreatedTable(boolean createdTable) {
-		this.O = createdTable;
+		this.createdTable = createdTable;
 	}
 
+	/**
+	 * <pre>
+	 * 获取不包含主键的字段
+	 * </pre>
+	 * @return
+	 */
+	@Override
 	public List<BusinessColumn> getColumnsWithoutPk() {
 		if (this.columns == null) {
 			return null;
 		}
-		ArrayList<BusinessColumn> columnList = new ArrayList<BusinessColumn>();
+		List<BusinessColumn> columnList = new ArrayList<BusinessColumn>();
 		for (BusinessColumn column : this.columns) {
 			if (column.isPrimary())
 				continue;
@@ -148,6 +192,17 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 		return columnList;
 	}
 
+	
+	/**
+	 * <pre>
+	 * 获取表的初始化数据库的数据
+	 * 不包含主键
+	 * 字段取的是name
+	 * 其实就是获取字段的默认值
+	 * </pre>	
+	 * @return
+	 */
+	@Override
 	public Map<String, Object> initDbData() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		for (IBusinessColumn column : this.getColumnsWithoutPk()) {
@@ -155,7 +210,18 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 		}
 		return map;
 	}
-
+	
+	/**
+	 * <pre>
+	 * 获取表的初始化数据
+	 * 不包含主键
+	 * 字段取的是key
+	 * 其实就是获取字段的默认值
+	 * </pre>	
+	 * @return
+	 */
+	
+	@Override
 	public Map<String, Object> initData() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		for (IBusinessColumn column : this.getColumnsWithoutPk()) {
@@ -164,14 +230,6 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 		return map;
 	}
 
-	public BusinessColumn d(String key) {
-		for (BusinessColumn column : this.columns) {
-			if (!key.equals(column.getKey()))
-				continue;
-			return column;
-		}
-		return null;
-	}
 
 	public Date getCreateTime() {
 		return null;
@@ -201,7 +259,20 @@ public class BusinessTable extends Table<BusinessColumn> implements IBaseModel, 
 	public void setUpdateBy(String updateBy) {
 	}
 
-	public IBusinessColumn getColumnByKey(String string) {
-		return this.d(string);
+	/**
+	 * <pre>
+	 * 根据字段key获取字段
+	 * </pre>	
+	 * @param key
+	 * @return
+	 */
+	@Override
+	public IBusinessColumn getColumnByKey(String key) {
+		for (IBusinessColumn column : this.columns) {
+			if (!key.equals(column.getKey()))
+				continue;
+			return column;
+		}
+		return null;
 	}
 }

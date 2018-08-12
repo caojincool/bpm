@@ -57,7 +57,7 @@ public class TaskCompleteListener extends AbstractTaskListener<DefualtTaskAction
 	public void g(DefualtTaskActionCmd taskActionModel) {
 		this.LOG.debug("任务【{}】执行完成事件 - TaskID: {}", (Object) taskActionModel.getBpmTask().getName(),
 				(Object) taskActionModel.getBpmTask().getId());
-		Map actionVariables = taskActionModel.getActionVariables();
+		Map<String, Object> actionVariables = taskActionModel.getActionVariables();
 		if (BeanUtils.isEmpty((Object) actionVariables)) {
 			return;
 		}
@@ -96,7 +96,7 @@ public class TaskCompleteListener extends AbstractTaskListener<DefualtTaskAction
 		BpmInstance instance = (BpmInstance) taskActionModel.getBpmInstance();
 		if (!flowStatus.getKey().equals(instance.getStatus())) {
 			instance.setStatus(flowStatus.getKey());
-			this.f.update((Object) instance);
+			this.f.update(instance);
 		}
 		if ((bpmTaskOpinion = this.aO.getByTaskId(taskActionModel.getTaskId())) == null) {
 			return;
@@ -112,7 +112,7 @@ public class TaskCompleteListener extends AbstractTaskListener<DefualtTaskAction
 			bpmTaskOpinion.setApprover(user.getUserId());
 			bpmTaskOpinion.setApproverName(user.getFullname());
 		}
-		this.aO.update((Object) bpmTaskOpinion);
+		this.aO.update(bpmTaskOpinion);
 	}
 
 	private OpinionStatus d(String actionName) {
@@ -146,29 +146,44 @@ public class TaskCompleteListener extends AbstractTaskListener<DefualtTaskAction
 	private void k(DefualtTaskActionCmd taskActionModel) {
 		BpmTaskStack bpmTaskStack = this.aA.getByTaskId(taskActionModel.getTaskId());
 		bpmTaskStack.setEndTime(new Date());
-		this.aA.update((Object) bpmTaskStack);
+		this.aA.update(bpmTaskStack);
 		taskActionModel.setTaskStack(bpmTaskStack);
 	}
 
 	private void l(DefualtTaskActionCmd taskActionModel) {
 		this.i.removeByTaskId(taskActionModel.getTaskId());
-		this.aQ.remove((Serializable) ((Object) taskActionModel.getTaskId()));
+		this.aQ.remove(taskActionModel.getTaskId());
 	}
 
-	public TaskActionCmd a(TaskEntity taskEntity) {
+	public DefualtTaskActionCmd a(TaskEntity taskEntity) {
 		return this.b(taskEntity);
 	}
 
-	public void c(TaskActionCmd taskActionCmd) {
-		this.i((DefualtTaskActionCmd) taskActionCmd);
+//	public void c(TaskActionCmd taskActionCmd) {
+//		this.i((DefualtTaskActionCmd) taskActionCmd);
+//	}
+
+//	public void b(TaskActionCmd taskActionCmd) {
+//		this.h((DefualtTaskActionCmd) taskActionCmd);
+//	}
+
+//	public void a(TaskActionCmd taskActionCmd) {
+//		this.g((DefualtTaskActionCmd) taskActionCmd);
+//	}
+
+	@Override
+	public void a(DefualtTaskActionCmd taskActionCmd) {
+		this.g( taskActionCmd);
 	}
 
-	public void b(TaskActionCmd taskActionCmd) {
-		this.h((DefualtTaskActionCmd) taskActionCmd);
+	@Override
+	public void b(DefualtTaskActionCmd taskActionCmd) {
+		this.h( taskActionCmd);
 	}
 
-	public void a(TaskActionCmd taskActionCmd) {
-		this.g((DefualtTaskActionCmd) taskActionCmd);
+	@Override
+	public void c(DefualtTaskActionCmd taskActionCmd) {
+		this.i(taskActionCmd);
 	}
 
 }

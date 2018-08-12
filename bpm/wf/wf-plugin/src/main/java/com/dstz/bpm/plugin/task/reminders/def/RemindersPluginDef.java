@@ -20,7 +20,7 @@ public class RemindersPluginDef extends AbstractBpmTaskPluginDef {
 	}
 
 	public static RemindersPluginDef a(Reminders remindersExt) {
-		List reminderExtList = remindersExt.getReminder();
+		List<com.dstz.bpm.plugin.task.reminders.entity.Reminder> reminderExtList = remindersExt.getReminder();
 		if (BeanUtils.isEmpty((Object) reminderExtList)) {
 			return null;
 		}

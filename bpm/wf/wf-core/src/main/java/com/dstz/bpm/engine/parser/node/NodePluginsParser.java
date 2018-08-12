@@ -15,7 +15,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NodePluginsParser extends AbsNodeParse<BpmPluginContext> {
-	public Object a(BaseBpmNodeDef userNodeDef, String json) {
+	
+	
+	@Override
+	public Object parseDef(BaseBpmNodeDef userNodeDef, String json) {
 		JSONObject plugins = JSON.parseObject((String) json);
 		ArrayList<BpmPluginContext> pluginContextList = new ArrayList<BpmPluginContext>();
 		for (String pluginName : plugins.keySet()) {
@@ -37,17 +40,9 @@ public class NodePluginsParser extends AbsNodeParse<BpmPluginContext> {
 	public String validate(Object o) {
 		return null;
 	}
-
-	public void a(BaseBpmNodeDef userNodeDef, Object object) {
+	@Override
+	public void setDefParam(BaseBpmNodeDef userNodeDef, Object object) {
 		ArrayList pluginContextList = (ArrayList) object;
 		userNodeDef.setBpmPluginContexts((List) pluginContextList);
-	}
-
-	public Object parseDef(BpmDef bpmDef, String string) {
-		return this.a((BaseBpmNodeDef) bpmDef, string);
-	}
-
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((BaseBpmNodeDef) bpmDef, object);
 	}
 }

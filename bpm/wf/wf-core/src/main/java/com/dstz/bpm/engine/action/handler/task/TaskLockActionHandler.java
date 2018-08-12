@@ -29,7 +29,7 @@ public class TaskLockActionHandler extends AbstractTaskActionHandler<DefualtTask
 		task.setAssigneeId(ContextUtil.getCurrentUserId());
 		task.setAssigneeNames(ContextUtil.getCurrentUser().getFullname());
 		task.setStatus(TaskStatus.LOCK.getKey());
-		this.ay.update((Object) task);
+		this.ay.update(task);
 	}
 
 	protected void d(DefualtTaskActionCmd actionModel) {
@@ -53,20 +53,22 @@ public class TaskLockActionHandler extends AbstractTaskActionHandler<DefualtTask
 	public String getConfigPage() {
 		return "";
 	}
-
-	protected void i(BaseActionCmd baseActionCmd) {
+	@Override
+	protected void i(DefualtTaskActionCmd baseActionCmd) {
 		this.d((DefualtTaskActionCmd) baseActionCmd);
 	}
-
-	protected void h(BaseActionCmd baseActionCmd) {
+	@Override
+	protected void h(DefualtTaskActionCmd baseActionCmd) {
 		this.e((DefualtTaskActionCmd) baseActionCmd);
 	}
-
-	public void a(BaseActionCmd baseActionCmd) {
+	@Override
+	public void a(DefualtTaskActionCmd baseActionCmd) {
 		this.f((DefualtTaskActionCmd) baseActionCmd);
 	}
-
-	public void execute(ActionCmd actionCmd) {
+	@Override
+	public void execute(DefualtTaskActionCmd actionCmd) {
 		this.f((DefualtTaskActionCmd) actionCmd);
 	}
+
+	
 }

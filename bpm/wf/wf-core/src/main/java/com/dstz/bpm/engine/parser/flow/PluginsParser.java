@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PluginsParser extends AbsFlowParse<BpmPluginContext> {
-	public Object a(DefaultBpmProcessDef bpmProcessDef, String json) {
+	
+	
+	public Object parseDef(DefaultBpmProcessDef bpmProcessDef, String json) {
 		JSONObject plugins = JSON.parseObject((String) json);
 		ArrayList<BpmPluginContext> pluginContextList = new ArrayList<BpmPluginContext>();
 		for (String pluginName : plugins.keySet()) {
@@ -45,16 +47,9 @@ public class PluginsParser extends AbsFlowParse<BpmPluginContext> {
 		return null;
 	}
 
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
-		ArrayList pluginContextList = (ArrayList) object;
-		bpmProcessDef.setPluginContextList((List) pluginContextList);
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
+		ArrayList<BpmPluginContext> pluginContextList = (ArrayList) object;
+		bpmProcessDef.setPluginContextList(pluginContextList);
 	}
 
-	public Object parseDef(BpmDef bpmDef, String string) {
-		return this.a((DefaultBpmProcessDef) bpmDef, string);
-	}
-
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

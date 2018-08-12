@@ -26,12 +26,12 @@ public class ApproverPluginContext extends AbstractUserCalcPluginContext<Approve
 		return ApproverPlugin.class;
 	}
 
-	protected ApproverPluginDef a(JSONObject pluginJson) {
+	protected ApproverPluginDef parseJson(JSONObject pluginJson) {
 		ApproverPluginDef def = new ApproverPluginDef();
 		return def;
 	}
 
-	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
-		return this.a(jSONObject);
-	}
+//	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
+//		return this.a(jSONObject);
+//	}
 }

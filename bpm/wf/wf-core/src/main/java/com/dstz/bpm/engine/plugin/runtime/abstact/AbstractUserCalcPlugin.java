@@ -57,7 +57,7 @@ public abstract class AbstractUserCalcPlugin<M extends BpmTaskPluginDef> impleme
 				results.add(bpmIdentity);
 				continue;
 			}
-			List users = this.bL.getUserListByGroup(bpmIdentity.getType(), bpmIdentity.getId());
+			List<IUser> users = this.bL.getUserListByGroup(bpmIdentity.getType(), bpmIdentity.getId());
 			for (IUser user : users) {
 				results.add((SysIdentity) new BpmIdentity(user));
 			}

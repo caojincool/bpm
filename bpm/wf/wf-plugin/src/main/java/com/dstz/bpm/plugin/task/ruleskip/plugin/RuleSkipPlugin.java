@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RuleSkipPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession, RuleSkipPluginDef> {
 	@Resource
-	IGroovyScriptEngine g;
+	private IGroovyScriptEngine g;
 
 	public Void a(BpmTaskPluginSession pluginSession, RuleSkipPluginDef pluginDef) {
 		if (BeanUtils.isEmpty((Object) pluginDef.getJumpRules())) {
@@ -47,7 +47,9 @@ public class RuleSkipPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession, 
 		return null;
 	}
 
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmTaskPluginSession) object, (RuleSkipPluginDef) object2);
+
+	@Override
+	public Void execute(BpmTaskPluginSession pluginSession, RuleSkipPluginDef pluginDef) {
+		return this.a(pluginSession, pluginDef);
 	}
 }

@@ -13,12 +13,9 @@ public class GlobalMobileFormParse extends AbsFlowParse<DefaultForm> {
 		return "globalMobileForm";
 	}
 
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		DefaultForm form = (DefaultForm) object;
 		bpmProcessDef.setGlobalMobileForm((BpmForm) form);
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

@@ -39,12 +39,13 @@ public class TaskOpposeActionHandler extends AbstractTaskActionHandler<DefualtTa
 	public Boolean isDefault() {
 		return false;
 	}
-
-	protected void i(BaseActionCmd baseActionCmd) {
+	@Override
+	protected void i(DefualtTaskActionCmd baseActionCmd) {
 		this.d((DefualtTaskActionCmd) baseActionCmd);
 	}
-
-	protected void h(BaseActionCmd baseActionCmd) {
+	@Override
+	protected void h(DefualtTaskActionCmd baseActionCmd) {
 		this.e((DefualtTaskActionCmd) baseActionCmd);
 	}
+
 }

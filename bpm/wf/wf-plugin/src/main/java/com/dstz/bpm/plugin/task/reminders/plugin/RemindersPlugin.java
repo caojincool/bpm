@@ -14,12 +14,12 @@ public class RemindersPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession,
 	@Resource
 	IGroovyScriptEngine groovyScriptEngine;
 
-	public Void a(BpmTaskPluginSession pluginSession, RemindersPluginDef pluginDef) {
+	public Void execute(BpmTaskPluginSession pluginSession, RemindersPluginDef pluginDef) {
 		if (pluginSession.getEventType() == EventType.TASK_COMPLETE_EVENT) {
 			return null;
 		}
 		RemindersPluginDef reminderDef = pluginDef;
-		List reminderList = reminderDef.getReminderList();
+		List<Reminder> reminderList = reminderDef.getReminderList();
 		for (Reminder reminder : reminderList) {
 			this.a(reminder, pluginSession);
 		}
@@ -33,9 +33,5 @@ public class RemindersPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession,
 				&& !((Boolean) object).booleanValue()) {
 			return;
 		}
-	}
-
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmTaskPluginSession) object, (RemindersPluginDef) object2);
 	}
 }

@@ -5,11 +5,9 @@ import com.dstz.base.core.encrypt.EncryptUtil;
 import com.dstz.base.core.util.PropertyUtil;
 import com.dstz.base.core.util.StringUtil;
 import com.dstz.base.core.util.time.DateFormatUtil;
-import com.dstz.bpm.api.engine.plugin.def.BpmDef;
 import com.dstz.bpm.engine.model.DefaultBpmProcessDef;
 import com.dstz.bpm.engine.model.DefaultBpmVariableDef;
 import com.dstz.bpm.engine.parser.flow.AbsFlowParse;
-import java.io.PrintStream;
 import java.util.Date;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +16,15 @@ public class FlowVersionParse extends AbsFlowParse<DefaultBpmVariableDef> {
 	private static boolean bD = false;
 	private static String bE = "b";
 
-	public void b(DefaultBpmProcessDef def, JSONObject flowConf) {
+	public void parse(DefaultBpmProcessDef def, JSONObject flowConf) {
 		if (bD) {
-			flowConf.put("v", (Object) bE);
+			flowConf.put("v", bE);
 			if (bE.equals("b")) {
 				this.a(flowConf);
 			}
 			return;
 		}
-		String key = PropertyUtil.getProperty((String) String.format("%s.%s", "s", "k"));
+		String key = PropertyUtil.getProperty(String.format("%s.%s", "s", "k"));
 		bE = this.f(key);
 		this.g(bE);
 		if (bE.equals("b")) {
@@ -79,15 +77,7 @@ public class FlowVersionParse extends AbsFlowParse<DefaultBpmVariableDef> {
 		return null;
 	}
 
-	public void a(DefaultBpmProcessDef bpmdef, Object object) {
-	}
-
-	public void parse(BpmDef bpmDef, JSONObject jSONObject) {
-		this.b((DefaultBpmProcessDef) bpmDef, jSONObject);
-	}
-
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
+	public void setDefParam(DefaultBpmProcessDef bpmdef, Object object) {
 	}
 
 }

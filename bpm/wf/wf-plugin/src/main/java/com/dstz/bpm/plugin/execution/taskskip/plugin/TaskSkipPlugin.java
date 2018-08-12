@@ -28,7 +28,8 @@ public class TaskSkipPlugin extends AbstractBpmExecutionPlugin<BpmExecutionPlugi
 	@Resource
 	BpmProcessDefService h;
 
-	public Void a(BpmExecutionPluginSession pluginSession, TaskSkipPluginDef pluginDef) {
+	@Override
+	public Void execute(BpmExecutionPluginSession pluginSession, TaskSkipPluginDef pluginDef) {
 		DefualtTaskActionCmd model = (DefualtTaskActionCmd) BpmContext.getActionModel();
 		TaskSkipType isSkip = this.b(pluginSession, pluginDef);
 		model.setHasSkipThisTask(isSkip);
@@ -76,7 +77,7 @@ public class TaskSkipPlugin extends AbstractBpmExecutionPlugin<BpmExecutionPlugi
 					break;
 				}
 				case FIRSTNODE_SKIP : {
-					List list = this.h.getStartNodes(model.getBpmTask().getDefId());
+					List<BpmNodeDef> list = this.h.getStartNodes(model.getBpmTask().getDefId());
 					for (BpmNodeDef def : list) {
 						if (!def.getNodeId().equals(model.getBpmTask().getNodeId()))
 							continue;
@@ -95,8 +96,8 @@ public class TaskSkipPlugin extends AbstractBpmExecutionPlugin<BpmExecutionPlugi
 		return skipResult;
 	}
 
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmExecutionPluginSession) object, (TaskSkipPluginDef) object2);
-	}
+//	public Object execute(Object object, Object object2) {
+//		return this.a((BpmExecutionPluginSession) object, (TaskSkipPluginDef) object2);
+//	}
 
 }

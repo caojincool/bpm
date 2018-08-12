@@ -46,13 +46,13 @@ public class BpmTaskOpinionManagerImpl extends BaseManager<String, BpmTaskOpinio
 			bpmTaskOpinion.setCreateBy(user.getUserId());
 			bpmTaskOpinion.setUpdateBy(user.getUserId());
 		}
-		this.create((Serializable) bpmTaskOpinion);
+		this.create(bpmTaskOpinion);
 	}
 
 	public void createOpinionByTask(TaskActionCmd taskActionModel) {
 		IBpmTask task = taskActionModel.getBpmTask();
 		IBpmInstance bpmInstance = taskActionModel.getBpmInstance();
-		List taskIdentitys = taskActionModel.getBpmIdentity(taskActionModel.getNodeId());
+		List<SysIdentity> taskIdentitys = taskActionModel.getBpmIdentity(taskActionModel.getNodeId());
 		BpmTaskOpinion bpmTaskOpinion = new BpmTaskOpinion();
 		bpmTaskOpinion.setUpdateTime(new Date());
 		bpmTaskOpinion.setDurMs(Long.valueOf(0L));
@@ -77,7 +77,7 @@ public class BpmTaskOpinionManagerImpl extends BaseManager<String, BpmTaskOpinio
 			}
 		}
 		bpmTaskOpinion.setAssignInfo(assignInfo.toString());
-		this.create((Serializable) bpmTaskOpinion);
+		this.create(bpmTaskOpinion);
 	}
 
 	public List<BpmTaskOpinion> getByInstAndNode(String instId, String nodeId) {

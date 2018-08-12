@@ -27,7 +27,7 @@ public class TaskSkipPluginContext extends AbstractBpmExecutionPluginContext<Tas
 		return TaskSkipPlugin.class;
 	}
 
-	protected TaskSkipPluginDef c(JSON pluginJson) {
+	protected TaskSkipPluginDef parseFromJson(JSON pluginJson) {
 		TaskSkipPluginDef def = (TaskSkipPluginDef) JSON.toJavaObject((JSON) pluginJson, TaskSkipPluginDef.class);
 		return def;
 	}
@@ -36,7 +36,7 @@ public class TaskSkipPluginContext extends AbstractBpmExecutionPluginContext<Tas
 		return "任务跳过";
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.c(jSON);
-	}
+//	protected BpmPluginDef parseFromJson(JSON jSON) {
+//		return this.c(jSON);
+//	}
 }

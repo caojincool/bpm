@@ -22,7 +22,8 @@ public class SequenceFlowParseHandler extends AbstractBpmnParseHandler<SequenceF
 		return SequenceFlow.class;
 	}
 
-	protected void a(BpmnParse bpmnParse, SequenceFlow sequenceFlow) {
+	@Override
+	protected void executeParse(BpmnParse bpmnParse, SequenceFlow sequenceFlow) {
 		Expression skipExpression;
 		ScopeImpl scope = bpmnParse.getCurrentScope();
 		ActivityImpl sourceActivity = scope.findActivity(sequenceFlow.getSourceRef());
@@ -44,9 +45,5 @@ public class SequenceFlowParseHandler extends AbstractBpmnParseHandler<SequenceF
 			transition.setProperty(PROPERTYNAME_CONDITION, (Object) expressionCondition);
 		}
 		this.createExecutionListenersOnTransition(bpmnParse, sequenceFlow.getExecutionListeners(), transition);
-	}
-
-	protected void executeParse(BpmnParse bpmnParse, BaseElement baseElement) {
-		this.a(bpmnParse, (SequenceFlow) baseElement);
 	}
 }

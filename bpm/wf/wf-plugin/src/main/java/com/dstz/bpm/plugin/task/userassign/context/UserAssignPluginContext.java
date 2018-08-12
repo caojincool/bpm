@@ -8,6 +8,7 @@ import com.dstz.base.core.util.BeanUtils;
 import com.dstz.base.core.util.JsonUtil;
 import com.dstz.base.core.util.ThreadMsgUtil;
 import com.dstz.bpm.api.constant.EventType;
+import com.dstz.bpm.api.engine.plugin.context.UserCalcPluginContext;
 import com.dstz.bpm.api.engine.plugin.context.UserQueryPluginContext;
 import com.dstz.bpm.api.engine.plugin.def.BpmPluginDef;
 import com.dstz.bpm.api.engine.plugin.def.BpmUserCalcPluginDef;
@@ -50,7 +51,7 @@ public class UserAssignPluginContext extends AbstractBpmTaskPluginContext<UserAs
 		return (JSON) JSON.toJSON((Object) ruleList);
 	}
 
-	protected UserAssignPluginDef g(JSON pluginJson) {
+	protected UserAssignPluginDef parseFromJson(JSON pluginJson) {
 		UserAssignPluginDef def = new UserAssignPluginDef();
 		JSONArray userRuleList = null;
 		if (pluginJson instanceof JSONObject) {
@@ -73,7 +74,7 @@ public class UserAssignPluginContext extends AbstractBpmTaskPluginContext<UserAs
 				continue;
 			}
 			JSONArray calcAry = ruleJson.getJSONArray("calcs");
-			ArrayList<AbstractUserCalcPluginContext> calcPluginContextList = new ArrayList<AbstractUserCalcPluginContext>();
+			ArrayList<UserCalcPluginContext> calcPluginContextList = new ArrayList<UserCalcPluginContext>();
 			for (Object obj : calcAry) {
 				JSONObject calcObj = (JSONObject) obj;
 				String pluginContext = JsonUtil.getString((JSONObject) calcObj, (String) "pluginType")
@@ -97,7 +98,7 @@ public class UserAssignPluginContext extends AbstractBpmTaskPluginContext<UserAs
 		return "用户分配插件";
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.g(jSON);
-	}
+//	protected BpmPluginDef parseFromJson(JSON jSON) {
+//		return this.g(jSON);
+//	}
 }

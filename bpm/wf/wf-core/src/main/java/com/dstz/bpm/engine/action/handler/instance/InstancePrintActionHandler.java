@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InstancePrintActionHandler implements ActionHandler {
+	
 	public void execute(ActionCmd model) {
 	}
 

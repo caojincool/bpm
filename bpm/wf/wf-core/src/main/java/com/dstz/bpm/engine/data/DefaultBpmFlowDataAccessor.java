@@ -51,29 +51,29 @@ import org.springframework.stereotype.Component;
 public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
 	@Resource
-	BpmInstanceManager aD;
+	private BpmInstanceManager aD;
 	@Resource
-	BpmRightsFormService aE;
+	private BpmRightsFormService aE;
 	@Resource
-	BpmDefinitionManager c;
+	private BpmDefinitionManager c;
 	@Resource
-	BpmProcessDefService a;
+	private BpmProcessDefService a;
 	@Resource
-	BpmTaskManager ay;
+	private BpmTaskManager ay;
 	@Resource
-	FormService aF;
+	private FormService aF;
 	@Resource
-	BpmBusLinkManager aG;
+	private BpmBusLinkManager aG;
 	@Resource
-	BpmBusDataHandle aH;
+	private BpmBusDataHandle aH;
 	@Resource
-	IGroovyScriptEngine av;
+	private IGroovyScriptEngine av;
 	@Resource
-	IBusinessDataService businessDataService;
+	private IBusinessDataService businessDataService;
 
 	public BpmFlowInstanceData getInstanceData(String instanceId, FormType formType, String nodeId) {
 		BpmFlowInstanceData data = new BpmFlowInstanceData();
-		BpmInstance instance = (BpmInstance) this.aD.get((Serializable) ((Object) instanceId));
+		BpmInstance instance = (BpmInstance) this.aD.get(instanceId);
 		data.setInstance((IBpmInstance) instance);
 		this.a((BpmFlowData) data, instanceId, nodeId, formType, true);
 		this.a((BpmFlowData) data, nodeId, true);
@@ -89,7 +89,7 @@ public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 			data.setDefId(defId);
 			this.a(data, formType);
 		} else {
-			BpmInstance instance = (BpmInstance) this.aD.get((Serializable) ((Object) instanceId));
+			BpmInstance instance = (BpmInstance) this.aD.get(instanceId);
 			data.setInstance((IBpmInstance) instance);
 			BpmNodeDef startNode = this.a.getStartEvent(instance.getDefId());
 			this.a((BpmFlowData) data, instanceId, readonly != false ? "" : startNode.getNodeId(), formType, readonly);
@@ -101,7 +101,7 @@ public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 
 	public BpmFlowData getFlowTaskData(String taskId, FormType formType) {
 		BpmFlowTaskData taskData = new BpmFlowTaskData();
-		IBpmTask task = (IBpmTask) this.ay.get((Serializable) ((Object) taskId));
+		IBpmTask task = (IBpmTask) this.ay.get(taskId);
 		if (task == null) {
 			throw new BusinessException("任务可能已经办理完成", (IStatusCode) BpmStatusCode.TASK_NOT_FOUND);
 		}
@@ -134,7 +134,7 @@ public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 	}
 
 	private void a(BpmFlowData flowData, String instaneId, String nodeId, FormType formType, boolean isReadOnly) {
-		BpmInstance instance = (BpmInstance) this.aD.get((Serializable) ((Object) instaneId));
+		BpmInstance instance = (BpmInstance) this.aD.get(instaneId);
 		String defKey = instance.getDefKey();
 		IBusinessPermission businessPermision = this.aE.getInstanceFormPermission(flowData, nodeId, formType,
 				isReadOnly);
@@ -153,7 +153,7 @@ public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 	}
 
 	private void a(BpmFlowData flowData, String nodeId) {
-		Map bos = flowData.getDataMap();
+		Map<String, IBusinessData>  bos = flowData.getDataMap();
 		if (BeanUtils.isEmpty((Object) bos)) {
 			return;
 		}
@@ -190,7 +190,7 @@ public class DefaultBpmFlowDataAccessor implements BpmFlowDataAccessor {
 
 	private void a(BpmFlowData flowData, String nodeId, boolean isReadOnly) {
 		BpmNodeDef nodeDef = this.a.getBpmNodeDef(flowData.getDefId(), nodeId);
-		List buttons = nodeDef.getButtons();
+		List<Button> buttons = nodeDef.getButtons();
 		if (isReadOnly) {
 			buttons = ButtonFactory.getInstanceButtons();
 		}

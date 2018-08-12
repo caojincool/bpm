@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbsActionHandler<T extends BaseActionCmd> implements ActionHandler<T> {
+	
 	protected Logger LOG = LoggerFactory.getLogger(this.getClass());
 	@Resource
 	protected BpmProcessDefService a;
@@ -62,7 +63,7 @@ public abstract class AbsActionHandler<T extends BaseActionCmd> implements Actio
 	protected IGroovyScriptEngine av;
 
 	@Transactional
-	public void a(T model) {
+	public void execute(T model) {
 		this.c(model);
 		this.k((BaseActionCmd) model);
 		BpmContext.setActionModel(model);
@@ -207,7 +208,7 @@ public abstract class AbsActionHandler<T extends BaseActionCmd> implements Actio
 	protected void a(BaseActionCmd cmd, BpmNodeDef nodeDef) {
 		String nodeId = nodeDef.getNodeId();
 		DefaultBpmProcessDef def = (DefaultBpmProcessDef) this.a.getBpmProcessDef(cmd.getBpmInstance().getDefId());
-		List nodeInitList = def.e(nodeId);
+		List<NodeInit> nodeInitList = def.e(nodeId);
 		Map bos = cmd.getBizDataMap();
 		if (BeanUtils.isEmpty((Object) bos) || BeanUtils.isEmpty((Object) nodeInitList)) {
 			return;
@@ -261,8 +262,8 @@ public abstract class AbsActionHandler<T extends BaseActionCmd> implements Actio
 		return "";
 	}
 
-	@Transactional
-	public void execute(ActionCmd actionCmd) {
-		this.a((T) ((BaseActionCmd) actionCmd));
-	}
+//	@Transactional
+//	public void execute(ActionCmd actionCmd) {
+//		this.a((BaseActionCmd) actionCmd);
+//	}
 }

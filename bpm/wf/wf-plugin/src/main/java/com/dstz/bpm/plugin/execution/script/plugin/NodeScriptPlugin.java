@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class NodeScriptPlugin extends AbstractBpmExecutionPlugin<BpmExecutionPluginSession, NodeScriptPluginDef> {
 	@Resource
-	IGroovyScriptEngine groovyScriptEngine;
+	private IGroovyScriptEngine groovyScriptEngine;
 
-	public Void a(BpmExecutionPluginSession pluginSession, NodeScriptPluginDef pluginDef) {
+	public Void execute(BpmExecutionPluginSession pluginSession, NodeScriptPluginDef pluginDef) {
 		String script = pluginDef.a(pluginSession.getEventType());
 		if (StringUtil.isEmpty((String) script)) {
 			return null;
@@ -27,7 +27,7 @@ public class NodeScriptPlugin extends AbstractBpmExecutionPlugin<BpmExecutionPlu
 		return null;
 	}
 
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmExecutionPluginSession) object, (NodeScriptPluginDef) object2);
-	}
+//	public Object execute(Object object, Object object2) {
+//		return this.a((BpmExecutionPluginSession) object, (NodeScriptPluginDef) object2);
+//	}
 }

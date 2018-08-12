@@ -49,13 +49,13 @@ public class ActivityComplatedListener implements ActEventListener {
 		if (StringUtil.isZeroEmpty((String) childInstance.getParentInstId())) {
 			throw new BusinessException("子流程提供的线程变量中，流程实例信息异常！", (IStatusCode) BpmStatusCode.ACTIONCMD_ERROR);
 		}
-		BpmInstance bpmInstance = (BpmInstance) this.aM.get((Serializable) ((Object) childInstance.getParentInstId()));
+		BpmInstance bpmInstance = (BpmInstance) this.aM.get(childInstance.getParentInstId());
 		if (!bpmInstance.getActInstId().equals(activitEvent.getProcessInstanceId())) {
 			throw new BusinessException("子流程提供的父流程实例，与外部子流程ACTVITI actInstanceID 不一致！",
 					(IStatusCode) BpmStatusCode.ACTIONCMD_ERROR);
 		}
 		BpmTaskStack bpmTaskStack = this.c(activitEvent.getExecutionId());
-		BpmDefinition bpmDefinition = (BpmDefinition) this.c.get((Serializable) ((Object) bpmInstance.getDefId()));
+		BpmDefinition bpmDefinition = (BpmDefinition) this.c.get(bpmInstance.getDefId());
 		DefualtTaskActionCmd callActiviti = new DefualtTaskActionCmd();
 		callActiviti.setBpmDefinition((IBpmDefinition) bpmDefinition);
 		callActiviti.setBpmInstance((IBpmInstance) bpmInstance);
@@ -66,7 +66,7 @@ public class ActivityComplatedListener implements ActEventListener {
 	private BpmTaskStack c(String executionId) {
 		BpmTaskStack bpmTaskStack = this.aA.getByTaskId(executionId);
 		bpmTaskStack.setEndTime(new Date());
-		this.aA.update((Object) bpmTaskStack);
+		this.aA.update(bpmTaskStack);
 		return bpmTaskStack;
 	}
 }

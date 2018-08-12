@@ -49,7 +49,7 @@ public class InstanceEndEventListener extends AbstractInstanceListener {
 		instance.setStatus(InstanceStatus.STATUS_END.getKey());
 		instance.setEndTime(new Date());
 		instance.setDuration(Long.valueOf(instance.getEndTime().getTime() - instance.getCreateTime().getTime()));
-		this.f.update((Object) instance);
+		this.f.update(instance);
 	}
 
 	public void c(InstanceActionCmd instanceActionModel) {

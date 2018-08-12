@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FlowPropertiesParse extends AbsFlowParse<BpmDefProperties> {
-	public void b(DefaultBpmProcessDef def, JSONObject flowConf) {
-		JSONObject properties = (JSONObject) JSONObject.toJSON((Object) def.getExtProperties());
-		if (flowConf.containsKey((Object) this.getKey())) {
+	
+	@Override
+	public void parse(DefaultBpmProcessDef def, JSONObject flowConf) {
+		JSONObject properties = (JSONObject) JSONObject.toJSON( def.getExtProperties());
+		if (flowConf.containsKey(this.getKey())) {
 			properties = flowConf.getJSONObject(this.getKey());
 		}
 		BpmDefProperties bpmDefproperties = (BpmDefProperties) JSONObject.toJavaObject((JSON) properties,
@@ -24,17 +26,10 @@ public class FlowPropertiesParse extends AbsFlowParse<BpmDefProperties> {
 	public String getKey() {
 		return "properties";
 	}
-
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	@Override
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		BpmDefProperties properties = (BpmDefProperties) object;
 		bpmProcessDef.setExtProperties(properties);
 	}
 
-	public void parse(BpmDef bpmDef, JSONObject jSONObject) {
-		this.b((DefaultBpmProcessDef) bpmDef, jSONObject);
-	}
-
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

@@ -25,7 +25,7 @@ public class UserAssignPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession
 	@Resource
 	IGroovyScriptEngine groovyScriptEngine;
 
-	public Void a(BpmTaskPluginSession pluginSession, BpmTaskPluginDef pluginDef) {
+	public Void execute(BpmTaskPluginSession pluginSession, BpmTaskPluginDef pluginDef) {
 		UserAssignPluginDef assignPluginDef = (UserAssignPluginDef) pluginDef;
 		TaskActionCmd model = (TaskActionCmd) BpmContext.getActionModel();
 		List identityList = model.getBpmIdentity(model.getNodeId());
@@ -38,7 +38,7 @@ public class UserAssignPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession
 		}
 		BpmUserCalcPluginSession bpmUserCalcPluginSession = BpmPluginSessionFactory
 				.buildBpmUserCalcPluginSession((BpmPluginSession) pluginSession);
-		List bpmIdentities = UserAssignRuleCalc.a((BpmUserCalcPluginSession) bpmUserCalcPluginSession, (List) ruleList,
+		List<SysIdentity> bpmIdentities = UserAssignRuleCalc.a((BpmUserCalcPluginSession) bpmUserCalcPluginSession, (List) ruleList,
 				(Boolean) false);
 		ArrayList<SysIdentity> identitieList = new ArrayList<SysIdentity>();
 		for (SysIdentity identity : bpmIdentities) {
@@ -52,7 +52,7 @@ public class UserAssignPlugin extends AbstractBpmTaskPlugin<BpmTaskPluginSession
 		return null;
 	}
 
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmTaskPluginSession) object, (BpmTaskPluginDef) object2);
-	}
+//	public Object execute(Object object, Object object2) {
+//		return this.a((BpmTaskPluginSession) object, (BpmTaskPluginDef) object2);
+//	}
 }

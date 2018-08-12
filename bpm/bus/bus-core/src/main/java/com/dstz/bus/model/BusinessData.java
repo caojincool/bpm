@@ -3,9 +3,8 @@ package com.dstz.bus.model;
 import com.alibaba.fastjson.JSONObject;
 import com.dstz.bus.api.constant.BusTableRelType;
 import com.dstz.bus.api.model.IBusTableRel;
+import com.dstz.bus.api.model.IBusinessColumn;
 import com.dstz.bus.api.model.IBusinessData;
-import com.dstz.bus.model.BusTableRel;
-import com.dstz.bus.model.BusinessColumn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,19 +19,20 @@ public class BusinessData implements IBusinessData {
 	private static final long serialVersionUID = -6272407461993770532L;
 	
 	
-	private BusTableRel busTableRel;
+	private IBusTableRel busTableRel;
 	private Map<String, Object> data = new HashMap<String, Object>();
-	private Map<String, List<BusinessData>> children = new HashMap<String, List<BusinessData>>();
+	private Map<String, List<IBusinessData>> children = new HashMap<String, List<IBusinessData>>();
 	private BusinessData parent;
 
-	public BusTableRel getBusTableRel() {
+	public IBusTableRel getBusTableRel() {
 		return this.busTableRel;
 	}
 
-	public void setBusTableRel(BusTableRel busTableRel) {
+	public void setBusTableRel(IBusTableRel busTableRel) {
 		this.busTableRel = busTableRel;
 	}
-
+	
+	@Override
 	public Map<String, Object> getData() {
 		return this.data;
 	}
@@ -41,11 +41,11 @@ public class BusinessData implements IBusinessData {
 		this.data = data;
 	}
 
-	public Map<String, List<BusinessData>> getChildren() {
+	public Map<String, List<IBusinessData>> getChildren() {
 		return this.children;
 	}
 
-	public void setChildren(Map<String, List<BusinessData>> children) {
+	public void setChildren(Map<String, List<IBusinessData>> children) {
 		this.children = children;
 	}
 
@@ -58,11 +58,14 @@ public class BusinessData implements IBusinessData {
 	}
 
 	public void setPk(Object id) {
-		this.data.put(this.busTableRel.getTable().getPkKey(), id);
+		BusinessTable businessTable = (BusinessTable)this.busTableRel.getTable();
+		this.data.put(businessTable.getPkKey(), id);
 	}
-
+	
+	@Override
 	public Object getPk() {
-		return this.data.get(this.busTableRel.getTable().getPkKey());
+		BusinessTable businessTable = (BusinessTable)this.busTableRel.getTable();
+		return this.data.get(businessTable.getPkKey());
 	}
 
 	public void put(String key, Object value) {
@@ -83,7 +86,7 @@ public class BusinessData implements IBusinessData {
 
 	public Map<String, Object> getDbData() {
 		HashMap<String, Object> dbData = new HashMap<String, Object>();
-		for (BusinessColumn column : this.busTableRel.getTable().getColumns()) {
+		for (IBusinessColumn column : this.busTableRel.getTable().getColumns()) {
 			if (!column.isPrimary()
 					&& !this.busTableRel.getBusObj().haveColumnDbEditRights(this.busTableRel.getTableKey(), column.getKey()))
 				continue;
@@ -94,13 +97,16 @@ public class BusinessData implements IBusinessData {
 	}
 
 	public void setDbData(Map<String, Object> dbData) {
-		for (BusinessColumn column : this.busTableRel.getTable().getColumns()) {
+		for (IBusinessColumn column : this.busTableRel.getTable().getColumns()) {
 			if (!this.busTableRel.getBusObj().haveColumnDbReadRights(this.busTableRel.getTableKey(), column.getKey()))
 				continue;
 			this.data.put(column.getKey(), dbData.get(column.getName()));
 		}
 	}
 
+	
+	
+	//TODO:推测该方法的作用
 	public void a(BusinessData businessData) {
 		String tableKey = businessData.getBusTableRel().getTable().getKey();
 		List list = this.children.computeIfAbsent(tableKey, k -> new ArrayList());
@@ -110,7 +116,7 @@ public class BusinessData implements IBusinessData {
 
 	public Map<String, List<IBusinessData>> getChilds() {
 		HashMap<String, List<IBusinessData>> map = new HashMap<String, List<IBusinessData>>();
-		for (Map.Entry<String, List<BusinessData>> entry : this.children.entrySet()) {
+		for (Map.Entry<String, List<IBusinessData>> entry : this.children.entrySet()) {
 			ArrayList<IBusinessData> list = new ArrayList<IBusinessData>();
 			list.addAll(entry.getValue());
 			map.put(entry.getKey(), list);
@@ -118,6 +124,11 @@ public class BusinessData implements IBusinessData {
 		return map;
 	}
 
+	
+	/**
+	 * TODO:填充的下级数据，需要继续猜测其使用方法
+	 */
+	@Override
 	public JSONObject fullBusDataInitData(JSONObject initData) {
 		if (initData == null) {
 			initData = new JSONObject();

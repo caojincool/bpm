@@ -13,12 +13,9 @@ public class InstanceFormParse extends AbsFlowParse<DefaultForm> {
 		return "instForm";
 	}
 
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		DefaultForm form = (DefaultForm) object;
 		bpmProcessDef.setInstForm((BpmForm) form);
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

@@ -13,7 +13,7 @@ public class FlowFormInitParse extends AbsFlowParse<NodeInit> {
 		return "nodeInitList";
 	}
 
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		List list = (List) object;
 		bpmProcessDef.setNodeInitList(list);
 	}
@@ -22,7 +22,4 @@ public class FlowFormInitParse extends AbsFlowParse<NodeInit> {
 		return true;
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

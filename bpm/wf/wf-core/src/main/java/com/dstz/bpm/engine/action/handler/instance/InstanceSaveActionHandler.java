@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InstanceSaveActionHandler extends AbsActionHandler<DefaultInstanceActionCmd> {
+	
 	protected void a(DefaultInstanceActionCmd model) {
 		BpmInstance instance = (BpmInstance) model.getBpmInstance();
 		instance.setStatus(InstanceStatus.STATUS_DRAFT.getKey());
@@ -30,8 +31,8 @@ public class InstanceSaveActionHandler extends AbsActionHandler<DefaultInstanceA
 	protected void c(DefaultInstanceActionCmd data) {
 		data.setBpmDefinition(this.a.getDefinitionById(data.getDefId()));
 		this.f(data);
-		this.l((BaseActionCmd) data);
-		this.a((BaseActionCmd) data, this.a.getStartEvent(data.getDefId()));
+		this.l(data);
+		this.a(data, this.a.getStartEvent(data.getDefId()));
 	}
 
 	protected void d(DefaultInstanceActionCmd actionModel) {
@@ -40,24 +41,29 @@ public class InstanceSaveActionHandler extends AbsActionHandler<DefaultInstanceA
 
 	protected void e(DefaultInstanceActionCmd actionModel) {
 		BpmInstance instance = (BpmInstance) actionModel.getBpmInstance();
-		if (instance.hasCreate().booleanValue()) {
-			this.f.update((Object) instance);
+		if (instance.hasCreate()) {
+			this.f.update(instance);
 		} else {
-			this.f.create((Object) instance);
+			this.f.create(instance);
 		}
+
 	}
 
 	protected void f(DefaultInstanceActionCmd intanceCmdData) {
 		String instId = intanceCmdData.getInstanceId();
 		BpmInstance instance = null;
-		if (StringUtil.isNotEmpty((String) instId) && StringUtil.isNotEmpty(
-				(String) (instance = (BpmInstance) this.f.get((Serializable) ((Object) instId))).getActInstId())) {
-			throw new BusinessException("草稿已经启动，请勿多次启动该草稿！");
+		if (StringUtil.isNotEmpty(instId)) {
+			instance = (BpmInstance) this.f.get(instId);
+			if (StringUtil.isNotEmpty(instance.getActInstId())) {
+				throw new BusinessException("草稿已经启动，请勿多次启动该草稿！");
+			}
 		}
+
 		if (instance == null) {
 			IBpmDefinition bpmDefinition = intanceCmdData.getBpmDefinition();
 			instance = this.f.genInstanceByDefinition(bpmDefinition);
 		}
+
 		intanceCmdData.setBpmInstance(instance);
 	}
 
@@ -70,10 +76,7 @@ public class InstanceSaveActionHandler extends AbsActionHandler<DefaultInstanceA
 	}
 
 	public Boolean isSupport(BpmNodeDef nodeDef) {
-		if (nodeDef.getType() == NodeType.START) {
-			return true;
-		}
-		return false;
+		return nodeDef.getType() == NodeType.START ? true : false;
 	}
 
 	public String getConfigPage() {
@@ -84,15 +87,14 @@ public class InstanceSaveActionHandler extends AbsActionHandler<DefaultInstanceA
 		return "";
 	}
 
-	protected void i(BaseActionCmd baseActionCmd) {
-		this.d((DefaultInstanceActionCmd) baseActionCmd);
+	@Override
+	protected void h(DefaultInstanceActionCmd var1) {
+		this.e(var1);
 	}
 
-	protected void h(BaseActionCmd baseActionCmd) {
-		this.b((DefaultInstanceActionCmd) baseActionCmd);
+	@Override
+	protected void i(DefaultInstanceActionCmd var1) {
+		this.b(var1);
 	}
 
-	protected void b(BaseActionCmd baseActionCmd) {
-		this.a((DefaultInstanceActionCmd) baseActionCmd);
-	}
 }

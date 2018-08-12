@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class BpmDefOverallManagerImpl implements BpmDefOverallManager {
 	@Resource
-	BpmDefinitionManager c;
+	private BpmDefinitionManager c;
 
 	public BpmOverallView getBpmOverallView(String defId) {
-		BpmDefinition def = (BpmDefinition) this.c.get((Serializable) ((Object) defId));
+		BpmDefinition def = (BpmDefinition) this.c.get(defId);
 		BpmOverallView overallView = new BpmOverallView();
 		overallView.setDefId(def.getId());
 		overallView.setBpmDefinition(def);

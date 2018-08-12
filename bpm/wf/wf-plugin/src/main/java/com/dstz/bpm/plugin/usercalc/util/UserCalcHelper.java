@@ -11,50 +11,65 @@ import java.util.List;
 import java.util.Map;
 
 public class UserCalcHelper {
-	public static List<String> a(ExecutorVar executorVar, BpmUserCalcPluginSession pluginSession,
-			boolean turnKeys2Ids) {
-		ArrayList<String> ids;
-		Map vars = null;
-		ids = new ArrayList<String>();
-		String PK = "";
-		if ("BO".equals(executorVar.getSource())) {
-			String[] BOData = executorVar.getName().split("\\.");
-			String[] boMap = null;
-			String[] boData = (String[]) boMap.get(BOData[0]);
-			PK = boData.getString(BOData[1]);
-		} else if ("flowVar".equals(executorVar.getSource())) {
-			PK = (String) vars.get(executorVar.getName());
-		}
-		String[] PKs = PK.split(",");
-		if (BeanUtils.isEmpty((Object) PK)) {
-			return Collections.emptyList();
-		}
-		if (executorVar.getExecutorType().equals("fixed")) {
-			ids.addAll(Arrays.asList(PKs));
-			return ids;
-		}
-		if ("user".equals(executorVar.getExecutorType())) {
-			if ("userId".equals(executorVar.getUserValType()) || !turnKeys2Ids) {
-				ids.addAll(Arrays.asList(PKs));
-			} else {
-				for (String account : PKs) {
-					Object u = null;
-					if (u == null)
-						continue;
-					ids.add(u.getUserId());
-				}
-			}
-		} else if ("groupId".equals(executorVar.getGroupValType()) || !turnKeys2Ids) {
-			ids.addAll(Arrays.asList(PKs));
-		} else {
-			String dimension = executorVar.getDimension();
-			for (String groupKey : PKs) {
-				Object group = null;
-				if (group == null)
-					continue;
-				ids.add(group.getGroupId());
-			}
-		}
-		return ids;
-	}
+	
+//	public static List<String> a(ExecutorVar executorVar, BpmUserCalcPluginSession pluginSession,
+//			boolean turnKeys2Ids) {
+//		Map<String, Object> vars = null;
+//		List<String> ids = new ArrayList();
+//		String PK = "";
+//		String[] PKs;
+//		String[] boMap;
+//		if ("BO".equals(executorVar.getSource())) {
+//			PKs = executorVar.getName().split("\\.");
+//			boMap = null;
+//			IBusinessData boData = (IBusinessData) boMap.get(PKs[0]);
+//			PK = boData.getString(PKs[1]);
+//		} else if ("flowVar".equals(executorVar.getSource())) {
+//			PK = (String) ((Map) vars).get(executorVar.getName());
+//		}
+//
+//		PKs = PK.split(",");
+//		if (BeanUtils.isEmpty(PK)) {
+//			return Collections.emptyList();
+//		} else if (executorVar.getExecutorType().equals("fixed")) {
+//			ids.addAll(Arrays.asList(PKs));
+//			return ids;
+//		} else {
+//			int var9;
+//			String var10000;
+//			if ("user".equals(executorVar.getExecutorType())) {
+//				if (!"userId".equals(executorVar.getUserValType()) && turnKeys2Ids) {
+//					boMap = PKs;
+//					int var14 = PKs.length;
+//
+//					for (var9 = 0; var9 < var14; ++var9) {
+//						var10000 = boMap[var9];
+//						IUser u = null;
+//						if (u != null) {
+//							ids.add(((IUser) u).getUserId());
+//						}
+//					}
+//				} else {
+//					ids.addAll(Arrays.asList(PKs));
+//				}
+//			} else if (!"groupId".equals(executorVar.getGroupValType()) && turnKeys2Ids) {
+//				String dimension = executorVar.getDimension();
+//				String[] var15 = PKs;
+//				var9 = PKs.length;
+//
+//				for (int var10 = 0; var10 < var9; ++var10) {
+//					var10000 = var15[var10];
+//					IGroup group = null;
+//					if (group != null) {
+//						ids.add(((IGroup) group).getGroupId());
+//					}
+//				}
+//			} else {
+//				ids.addAll(Arrays.asList(PKs));
+//			}
+//
+//			return ids;
+//		}
+//	}
+	
 }

@@ -24,7 +24,7 @@ public class RemindersPluginContext extends AbstractBpmTaskPluginContext<Reminde
 		return RemindersPlugin.class;
 	}
 
-	protected RemindersPluginDef d(JSON pluginJson) {
+	protected RemindersPluginDef parseFromJson(JSON pluginJson) {
 		RemindersPluginDef def = (RemindersPluginDef) JSON.toJavaObject((JSON) pluginJson, RemindersPluginDef.class);
 		return def;
 	}
@@ -33,7 +33,7 @@ public class RemindersPluginContext extends AbstractBpmTaskPluginContext<Reminde
 		return "任务催办";
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.d(jSON);
-	}
+//	protected BpmPluginDef parseFromJson(JSON jSON) {
+//		return this.d(jSON);
+//	}
 }

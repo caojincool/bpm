@@ -37,16 +37,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class NodeMessagePlugin extends AbstractBpmExecutionPlugin<BpmExecutionPluginSession, NodeMessagePluginDef> {
 	@Resource
-	IGroovyScriptEngine g;
+	private IGroovyScriptEngine g;
 	@Resource
-	BpmProcessDefService h;
+	private BpmProcessDefService h;
 	@Resource
-	JmsProducer i;
+	private JmsProducer i;
 	@Autowired
-	IFreemarkEngine j;
+	private IFreemarkEngine j;
 
 	public Void a(BpmExecutionPluginSession pluginSession, NodeMessagePluginDef pluginDef) {
-		List messages = pluginDef.getNodeMessageList();
+		List<NodeMessage> messages = pluginDef.getNodeMessageList();
 		for (NodeMessage nodeMessage : messages) {
 			if (!this.a(pluginSession, nodeMessage))
 				continue;
@@ -75,7 +75,7 @@ public class NodeMessagePlugin extends AbstractBpmExecutionPlugin<BpmExecutionPl
 			this.LOG.error("消息发送插件解析消息模板失败，可能原因为:{}", (Object) e.getMessage(), (Object) e);
 			e.printStackTrace();
 		}
-		List<Object> userList = new ArrayList();
+		List<SysIdentity> userList = new ArrayList();
 		if (BeanUtils.isEmpty((Object) nodeMessage.getUserRules())) {
 			BaseActionCmd cmd = (BaseActionCmd) BpmContext.getActionModel();
 			userList = cmd.getBpmIdentity(cmd.getNodeId());
@@ -120,7 +120,8 @@ public class NodeMessagePlugin extends AbstractBpmExecutionPlugin<BpmExecutionPl
 		return true;
 	}
 
-	public Object execute(Object object, Object object2) {
-		return this.a((BpmExecutionPluginSession) object, (NodeMessagePluginDef) object2);
+	@Override
+	public Void execute(BpmExecutionPluginSession pluginSession, NodeMessagePluginDef pluginDef) {
+		return this.a(pluginSession, pluginDef);
 	}
 }

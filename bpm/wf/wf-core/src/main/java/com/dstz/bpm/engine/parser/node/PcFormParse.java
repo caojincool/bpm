@@ -13,12 +13,12 @@ public class PcFormParse extends AbsNodeParse<DefaultForm> {
 		return "form";
 	}
 
-	public void a(BaseBpmNodeDef userNodeDef, Object object) {
+	public void setDefParam(BaseBpmNodeDef userNodeDef, Object object) {
 		DefaultForm form = (DefaultForm) object;
 		userNodeDef.setForm((BpmForm) form);
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((BaseBpmNodeDef) bpmDef, object);
-	}
+//	public void setDefParam(BpmDef bpmDef, Object object) {
+//		this.a((BaseBpmNodeDef) bpmDef, object);
+//	}
 }

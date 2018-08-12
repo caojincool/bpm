@@ -16,6 +16,13 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author aschs
  */
 public class Table<C extends Column> implements Serializable{
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = -6709530989653019184L;
+	
 	/**
 	 * 表名
 	 */

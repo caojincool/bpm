@@ -65,19 +65,20 @@ public class BpmTaskManagerImpl extends BaseManager<String, BpmTask> implements 
 	}
 
 	public void assigneeTask(String taskId, String userId, String userName) {
-		BpmTask task = (BpmTask) this.get((Serializable) ((Object) taskId));
+		BpmTask task = (BpmTask) this.get(taskId);
 		if (task == null) {
 			throw new BusinessException("任务可能已经被处理，请刷新。", (IStatusCode) BpmStatusCode.TASK_NOT_FOUND);
 		}
 		task.setAssigneeId(userId);
 		task.setAssigneeNames(userName);
 		task.setStatus(TaskStatus.DESIGNATE.getKey());
-		this.update((Serializable) task);
+		this.update(task);
 	}
 
 	public void unLockTask(String taskId) {
-		BpmTask task = (BpmTask) this.get((Serializable) ((Object) taskId));
-		List identitys = this.i.getByTaskId(task.getId());
+		BpmTask task = (BpmTask) this.get(taskId);
+		
+		List<TaskIdentityLink> identitys = this.i.getByTaskId(task.getId());
 		if (BeanUtils.isEmpty((Object) identitys)) {
 			throw new BusinessException("该任务并非多候选人状态，无效的操作！");
 		}
@@ -88,6 +89,6 @@ public class BpmTaskManagerImpl extends BaseManager<String, BpmTask> implements 
 		task.setAssigneeId("0");
 		task.setAssigneeNames(StringUtil.convertCollectionAsString(names));
 		task.setStatus(TaskStatus.NORMAL.getKey());
-		this.update((Serializable) task);
+		this.update(task);
 	}
 }

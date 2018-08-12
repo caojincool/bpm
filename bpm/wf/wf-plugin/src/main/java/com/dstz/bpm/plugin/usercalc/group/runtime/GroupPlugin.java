@@ -19,7 +19,7 @@ public class GroupPlugin extends AbstractUserCalcPlugin<GroupPluginDef> {
 	@Resource
 	GroupService ac;
 
-	public List<SysIdentity> a(BpmUserCalcPluginSession pluginSession, GroupPluginDef def) {
+	public List<SysIdentity> queryByPluginDef(BpmUserCalcPluginSession pluginSession, GroupPluginDef def) {
 		if (StringUtil.isEmpty((String) def.getGroupKey())) {
 			return null;
 		}
@@ -34,7 +34,7 @@ public class GroupPlugin extends AbstractUserCalcPlugin<GroupPluginDef> {
 		return identityList;
 	}
 
-	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
-		return this.a(bpmUserCalcPluginSession, (GroupPluginDef) bpmTaskPluginDef);
-	}
+//	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
+//		return this.a(bpmUserCalcPluginSession, (GroupPluginDef) bpmTaskPluginDef);
+//	}
 }

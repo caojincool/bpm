@@ -24,31 +24,37 @@ public class UserPlugin extends AbstractUserCalcPlugin<UserPluginDef> {
 	@Resource
 	UserService ak;
 
-	public List<SysIdentity> a(BpmUserCalcPluginSession pluginSession, UserPluginDef def) {
-		ArrayList<SysIdentity> list = new ArrayList<SysIdentity>();
+	public List<SysIdentity> queryByPluginDef(BpmUserCalcPluginSession pluginSession, UserPluginDef def) {
+		List<SysIdentity> list = new ArrayList();
 		String source = def.getSource();
 		if ("start".equals(source)) {
-			List opinions = this.aa.getByInstAndNode(pluginSession.getBpmTask().getInstId(), "start");
+			List<BpmTaskOpinion> opinions = this.aa.getByInstAndNode(pluginSession.getBpmTask().getInstId(), "start");
 			BpmTaskOpinion firstNode = (BpmTaskOpinion) opinions.get(0);
-			BpmIdentity bpmIdentity = new BpmIdentity(firstNode.getApprover(), firstNode.getApproverName(), "user");
-			list.add((SysIdentity) bpmIdentity);
+			SysIdentity bpmIdentity = new BpmIdentity(firstNode.getApprover(), firstNode.getApproverName(), "user");
+			list.add(bpmIdentity);
 		}
+
 		if ("currentUser".equals(source)) {
-			BpmIdentity bpmIdentity = new BpmIdentity(ContextUtil.getCurrentUser());
-			list.add((SysIdentity) bpmIdentity);
+			SysIdentity bpmIdentity = new BpmIdentity(ContextUtil.getCurrentUser());
+			list.add(bpmIdentity);
 		} else if ("spec".equals(source)) {
-			BpmIdentity aryAccount;
 			String userKeys = def.getAccount();
-			for (BpmIdentity account : aryAccount = userKeys.split(",")) {
-				IUser user = this.ak.getUserByAccount((String) account);
-				BpmIdentity bpmIdentity = new BpmIdentity(user);
-				list.add((SysIdentity) bpmIdentity);
+			String[] aryAccount = userKeys.split(",");
+			String[] var16 = aryAccount;
+			int var8 = aryAccount.length;
+
+			for (int var9 = 0; var9 < var8; ++var9) {
+				String account = var16[var9];
+				IUser user = this.ak.getUserByAccount(account);
+				SysIdentity bpmIdentity = new BpmIdentity(user);
+				list.add(bpmIdentity);
 			}
 		}
+
 		return list;
 	}
 
-	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
-		return this.a(bpmUserCalcPluginSession, (UserPluginDef) bpmTaskPluginDef);
-	}
+//	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
+//		return this.a(bpmUserCalcPluginSession, (UserPluginDef) bpmTaskPluginDef);
+//	}
 }

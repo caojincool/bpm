@@ -59,6 +59,8 @@
 
     <!-- 访问决策器 -->
     <bean id="accessDecisionManager" class="com.dstz.security.authentication.AccessDecisionManagerImpl"/>
+    
+    
     <!-- 获取 URL 对应的角色 -->
     <bean id="securityMetadataSource"
           class="com.dstz.security.authentication.FilterInvocationSecurityMetadataSourceImpl">

@@ -16,7 +16,7 @@ public class FlowVariablesParse extends AbsFlowParse<DefaultBpmVariableDef> {
 	}
 
 	public String validate(Object object) {
-		List varList = (List) object;
+		List<BpmVariableDef> varList = (List) object;
 		HashSet<String> keys = new HashSet<String>();
 		for (BpmVariableDef def : varList) {
 			String key = def.getKey();
@@ -27,8 +27,8 @@ public class FlowVariablesParse extends AbsFlowParse<DefaultBpmVariableDef> {
 		}
 		return "";
 	}
-
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	@Override
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		List varList = (List) object;
 		bpmProcessDef.setVarList(varList);
 	}
@@ -37,7 +37,4 @@ public class FlowVariablesParse extends AbsFlowParse<DefaultBpmVariableDef> {
 		return true;
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
 }

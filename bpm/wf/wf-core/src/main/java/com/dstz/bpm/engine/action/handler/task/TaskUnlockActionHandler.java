@@ -53,20 +53,22 @@ public class TaskUnlockActionHandler extends AbstractTaskActionHandler<DefualtTa
 	public String getConfigPage() {
 		return "";
 	}
-
-	protected void i(BaseActionCmd baseActionCmd) {
-		this.d((DefualtTaskActionCmd) baseActionCmd);
+	
+	@Override
+	protected void i(DefualtTaskActionCmd baseActionCmd) {
+		this.d(baseActionCmd);
 	}
-
-	protected void h(BaseActionCmd baseActionCmd) {
-		this.e((DefualtTaskActionCmd) baseActionCmd);
+	@Override
+	protected void h(DefualtTaskActionCmd baseActionCmd) {
+		this.e(baseActionCmd);
 	}
 
 	public void a(BaseActionCmd baseActionCmd) {
 		this.f((DefualtTaskActionCmd) baseActionCmd);
 	}
 
-	public void execute(ActionCmd actionCmd) {
+	public void execute(DefualtTaskActionCmd actionCmd) {
 		this.f((DefualtTaskActionCmd) actionCmd);
 	}
+
 }

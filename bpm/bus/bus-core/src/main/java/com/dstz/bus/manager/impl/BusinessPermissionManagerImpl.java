@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.dstz.base.api.exception.BusinessException;
 import com.dstz.base.manager.impl.BaseManager;
 import com.dstz.bus.api.constant.RightsType;
+import com.dstz.bus.api.model.IBusTableRel;
+import com.dstz.bus.api.model.IBusinessColumn;
 import com.dstz.bus.dao.BusinessPermissionDao;
 import com.dstz.bus.manager.BusinessObjectManager;
 import com.dstz.bus.manager.BusinessPermissionManager;
@@ -30,15 +32,17 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 		implements
 			BusinessPermissionManager {
 	@Resource
-	BusinessPermissionDao j;
+	private BusinessPermissionDao businessPermissionDao;
 	@Autowired
-	BusinessObjectManager k;
+	private BusinessObjectManager businessObjectManager;
 
 	public BusinessPermission getByObjTypeAndObjVal(String objType, String objVal) {
-		return this.j.getByObjTypeAndObjVal(objType, objVal);
+		return this.businessPermissionDao.getByObjTypeAndObjVal(objType, objVal);
 	}
 
 	public BusinessPermission getByObjTypeAndObjVal(String objType, String objVal, String defaultBoKeys) {
+		
+		
 		BusinessPermission oldPermission = this.getByObjTypeAndObjVal(objType, objVal);
 		if (oldPermission == null) {
 			oldPermission = new BusinessPermission();
@@ -47,7 +51,7 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 		businessPermission.setObjType(objType);
 		businessPermission.setObjVal(objVal);
 		for (String boKey : defaultBoKeys.split(",")) {
-			BusinessObject bo = this.k.getFilledByKey(boKey);
+			BusinessObject bo = this.businessObjectManager.getFilledByKey(boKey);
 			if (bo == null) {
 				throw new BusinessException(boKey + " 业务对象丢失！");
 			}
@@ -59,7 +63,7 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 				this.a((AbstractPermission) busObjPermission);
 			}
 			businessPermission.getBusObjMap().put(boKey, busObjPermission);
-			for (BusTableRel rel : bo.getRelation().list()) {
+			for (IBusTableRel rel : bo.getRelation().list()) {
 				BusTablePermission busTablePermission = (BusTablePermission) busObjPermission.getTableMap()
 						.get(rel.getTableKey());
 				if (busTablePermission == null) {
@@ -68,7 +72,7 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 					busTablePermission.setComment(rel.getTableComment());
 				}
 				busObjPermission.getTableMap().put(rel.getTableKey(), busTablePermission);
-				for (BusinessColumn column : rel.getTable().getColumnsWithoutPk()) {
+				for (IBusinessColumn column : rel.getTable().getColumnsWithoutPk()) {
 					BusColumnPermission busColumnPermission = (BusColumnPermission) busTablePermission.getColumnMap()
 							.get(column.getKey());
 					if (busColumnPermission == null) {
@@ -78,18 +82,19 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 					}
 					busTablePermission.getColumnMap().put(column.getKey(), busColumnPermission);
 				}
-				Iterator it = busTablePermission.getColumnMap().entrySet().iterator();
+				Iterator<Map.Entry<String, BusColumnPermission>> it = busTablePermission.getColumnMap().entrySet().iterator();
 				while (it.hasNext()) {
-					Map.Entry entry = it.next();
-					if (rel.getTable().d((String) entry.getKey()) != null)
+					Map.Entry<String, BusColumnPermission> entry = it.next();
+					if (rel.getTable().getColumnByKey(entry.getKey()) != null)
 						continue;
 					it.remove();
 				}
 			}
-			Iterator it = busObjPermission.getTableMap().entrySet().iterator();
+			Iterator<Map.Entry<String, BusTablePermission>>  it = busObjPermission.getTableMap().entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry entry = it.next();
-				if (bo.getRelation().a((String) entry.getKey()) != null)
+				Map.Entry<String, BusTablePermission> entry = it.next();
+				
+				if (bo.getRelation().find(entry.getKey()) != null)
 					continue;
 				it.remove();
 			}
@@ -100,9 +105,9 @@ public class BusinessPermissionManagerImpl extends BaseManager<String, BusinessP
 	private void a(AbstractPermission permission) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject json = new JSONObject();
-		json.put("type", (Object) "everyone");
-		json.put("desc", (Object) "所有人");
-		jsonArray.add((Object) json);
+		json.put("type",  "everyone");
+		json.put("desc",  "所有人");
+		jsonArray.add(json);
 		permission.getRights().put(RightsType.getDefalut().getKey(), jsonArray);
 	}
 }

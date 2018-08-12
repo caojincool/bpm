@@ -31,14 +31,14 @@ public class SameNodePluginContext extends AbstractUserCalcPluginContext<SameNod
 		return SameNodePlugin.class;
 	}
 
-	protected SameNodePluginDef b(JSONObject pluginJson) {
+	protected SameNodePluginDef parseJson(JSONObject pluginJson) {
 		SameNodePluginDef def = new SameNodePluginDef();
 		String nodeId = JsonUtil.getString((JSONObject) pluginJson, (String) "nodeId");
 		def.setNodeId(nodeId);
 		return def;
 	}
 
-	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
-		return this.b(jSONObject);
-	}
+//	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
+//		return this.b(jSONObject);
+//	}
 }

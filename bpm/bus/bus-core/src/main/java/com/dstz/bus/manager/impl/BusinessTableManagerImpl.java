@@ -8,7 +8,6 @@ import com.dstz.base.core.util.StringUtil;
 import com.dstz.base.db.datasource.DbContextHolder;
 import com.dstz.base.db.id.UniqueIdUtil;
 import com.dstz.base.db.model.query.DefaultQueryFilter;
-import com.dstz.base.db.model.table.Table;
 import com.dstz.base.db.tableoper.TableOperator;
 import com.dstz.base.db.tableoper.TableOperatorFactory;
 import com.dstz.base.manager.impl.BaseManager;
@@ -21,34 +20,34 @@ import com.dstz.bus.model.BusinessColumn;
 import com.dstz.bus.model.BusinessTable;
 import com.dstz.bus.util.BusinessTableCacheUtil;
 import com.dstz.sys.api2.service.ISysDataSourceService;
-import java.io.Serializable;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable> implements BusinessTableManager {
-	@Autowired
-	BusinessTableDao l;
-	@Autowired
-	BusinessColumnManager m;
-	@Autowired
-	BusColumnCtrlManager n;
-	@Autowired
-	ISysDataSourceService o;
+	
+	
 	@Resource
-	JdbcTemplate jdbcTemplate;
+	private BusinessTableDao businessTableDao;
+	@Resource
+	private BusinessColumnManager businessColumnManager;
+	@Resource
+	private BusColumnCtrlManager busColumnCtrlManager;
+	@Resource
+	private ISysDataSourceService sysDataSourceService;
+	@Resource
+	private JdbcTemplate jdbcTemplate;
 
 	public void save(BusinessTable businessTable) {
 		if (StringUtil.isEmpty((String) businessTable.getId())) {
 			businessTable.setId(UniqueIdUtil.getSuid());
-			this.create((Serializable) businessTable);
+			this.create(businessTable);
 		} else {
-			this.update((Serializable) businessTable);
-			this.n.removeByTableId(businessTable.getId());
-			this.m.removeByTableId(businessTable.getId());
+			this.update(businessTable);
+			this.busColumnCtrlManager.removeByTableId(businessTable.getId());
+			this.businessColumnManager.removeByTableId(businessTable.getId());
 		}
 		for (BusinessColumn businessColumn : businessTable.getColumns()) {
 			if (StringUtil.isEmpty((String) businessColumn.getId())) {
@@ -56,7 +55,7 @@ public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable>
 			}
 			businessColumn.setTable(businessTable);
 			businessColumn.setTableId(businessTable.getId());
-			this.m.create((Object) businessColumn);
+			this.businessColumnManager.create(businessColumn);
 			BusColumnCtrl ctrl = businessColumn.getCtrl();
 			if (businessColumn.isPrimary())
 				continue;
@@ -64,7 +63,7 @@ public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable>
 				ctrl.setId(UniqueIdUtil.getSuid());
 			}
 			ctrl.setColumnId(businessColumn.getId());
-			this.n.create((Object) businessColumn.getCtrl());
+			this.busColumnCtrlManager.create(businessColumn.getCtrl());
 		}
 		this.newTableOperator(businessTable).syncColumn();
 		BusinessTableCacheUtil.put((BusinessTable) businessTable);
@@ -76,25 +75,12 @@ public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable>
 		return (BusinessTable) this.queryOne((QueryFilter) filter);
 	}
 
-	private void a(BusinessTable businessTable) {
-		if (businessTable == null) {
-			return;
-		}
-		List columns = this.m.getByTableId(businessTable.getId());
-		for (BusinessColumn column : columns) {
-			column.setCtrl(this.n.getByColumnId(column.getId()));
-			column.setTable(businessTable);
-		}
-		businessTable.setColumns(columns);
-		TableOperator tableOperator = this.newTableOperator(businessTable);
-		businessTable.setCreatedTable(tableOperator.isTableCreated());
-	}
+	
 
 	public TableOperator newTableOperator(BusinessTable businessTable) {
-		JdbcTemplate dataSourceJdbcTemplate = this.o.getJdbcTemplateByKey(businessTable.getDsKey());
-		return TableOperatorFactory.newOperator(
-				(String) DbContextHolder.getDataSourceDbType((String) businessTable.getDsKey()), (Table) businessTable,
-				(JdbcTemplate) dataSourceJdbcTemplate);
+		JdbcTemplate dataSourceJdbcTemplate = this.sysDataSourceService.getJdbcTemplateByKey(businessTable.getDsKey());
+		return TableOperatorFactory.newOperator( DbContextHolder.getDataSourceDbType(businessTable.getDsKey()), businessTable,
+				 dataSourceJdbcTemplate);
 	}
 
 	public BusinessTable getFilledByKey(String key) {
@@ -104,21 +90,36 @@ public class BusinessTableManagerImpl extends BaseManager<String, BusinessTable>
 		}
 		businessTable = this.getByKey(key);
 		this.a(businessTable);
-		BusinessTableCacheUtil.put((BusinessTable) businessTable);
+		BusinessTableCacheUtil.put(businessTable);
 		return businessTable;
 	}
 
+	
+	private void a(BusinessTable businessTable) {
+		if (businessTable == null) {
+			return;
+		}
+		List<BusinessColumn> columns = this.businessColumnManager.getByTableId(businessTable.getId());
+		for (BusinessColumn column : columns) {
+			column.setCtrl(this.busColumnCtrlManager.getByColumnId(column.getId()));
+			column.setTable(businessTable);
+		}
+		businessTable.setColumns(columns);
+		TableOperator tableOperator = this.newTableOperator(businessTable);
+		businessTable.setCreatedTable(tableOperator.isTableCreated());
+	}
+	
 	public void remove(String entityId) {
-		BusinessTable table = (BusinessTable) this.get((Serializable) ((Object) entityId));
+		BusinessTable table = (BusinessTable) this.get(entityId);
 		if (table == null) {
 			return;
 		}
-		List boNames = this.jdbcTemplate.queryForList(
+		List<String> boNames = this.jdbcTemplate.queryForList(
 				"select name_ from bus_object where relation_json_ like  '%\"tableKey\":\"" + table.getKey() + "\"%'",
 				String.class);
 		if (BeanUtils.isNotEmpty((Object) boNames)) {
 			throw new BusinessException("业务对象:" + boNames.toString() + "还在使用实体， 删除实体失败！");
 		}
-		super.remove((Serializable) ((Object) entityId));
+		super.remove(entityId);
 	}
 }

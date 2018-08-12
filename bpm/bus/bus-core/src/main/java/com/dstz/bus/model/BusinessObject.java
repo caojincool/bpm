@@ -4,6 +4,7 @@ import com.dstz.base.core.model.BaseModel;
 import com.dstz.base.core.util.JsonUtil;
 import com.dstz.bus.api.constant.RightsType;
 import com.dstz.bus.api.model.IBusTableRel;
+import com.dstz.bus.api.model.IBusinessColumn;
 import com.dstz.bus.api.model.IBusinessObject;
 import com.dstz.bus.api.model.permission.IBusObjPermission;
 import com.dstz.bus.model.BusTableRel;
@@ -17,19 +18,29 @@ import java.util.Map;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class BusinessObject extends BaseModel implements IBusinessObject {
+	
+	
+	/** 
+	
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+	
+	*/ 
+	private static final long serialVersionUID = 1472903804869951422L;
+	
+	
 	@NotEmpty
 	private String key;
 	@NotEmpty
 	private String name;
 	private String desc;
 	@NotEmpty
-	private String C;
+	private String relationJson;
 	private String groupId;
 	private String groupName;
 	@NotEmpty
-	private String D;
-	private BusTableRel E;
-	private BusObjPermission F;
+	private String persistenceType;
+	private BusTableRel relation;
+	private BusObjPermission permission;
 
 	public String getKey() {
 		return this.key;
@@ -56,12 +67,12 @@ public class BusinessObject extends BaseModel implements IBusinessObject {
 	}
 
 	public String getRelationJson() {
-		return this.C;
+		return this.relationJson;
 	}
 
 	public void setRelationJson(String relationJson) {
-		this.C = relationJson;
-		this.E = (BusTableRel) JsonUtil.parseObject((String) relationJson, BusTableRel.class);
+		this.relationJson = relationJson;
+		this.relation = (BusTableRel) JsonUtil.parseObject(relationJson, BusTableRel.class);
 	}
 
 	public String getGroupId() {
@@ -81,28 +92,28 @@ public class BusinessObject extends BaseModel implements IBusinessObject {
 	}
 
 	public String getPersistenceType() {
-		return this.D;
+		return this.persistenceType;
 	}
 
 	public void setPersistenceType(String persistenceType) {
-		this.D = persistenceType;
+		this.persistenceType = persistenceType;
 	}
 
 	public BusTableRel getRelation() {
-		return this.E;
+		return this.relation;
 	}
 
 	public void setRelation(BusTableRel relation) {
-		this.E = relation;
-		this.C = JsonUtil.toJSONString((Object) relation);
+		this.relation = relation;
+		this.relationJson = JsonUtil.toJSONString(relation);
 	}
 
 	public BusObjPermission getPermission() {
-		return this.F;
+		return this.permission;
 	}
 
 	public void setPermission(IBusObjPermission permission) {
-		this.F = (BusObjPermission) permission;
+		this.permission = (BusObjPermission) permission;
 	}
 
 	public boolean haveTableDbEditRights(String tableKey) {
@@ -125,7 +136,7 @@ public class BusinessObject extends BaseModel implements IBusinessObject {
 		BusColumnPermission columnPermission;
 		BusTablePermission tablePermission;
 		RightsType rightsType = null;
-		if (this.F != null && (tablePermission = (BusTablePermission) this.F.getTableMap().get(tableKey)) != null
+		if (this.permission != null && (tablePermission = (BusTablePermission) this.permission.getTableMap().get(tableKey)) != null
 				&& (columnPermission = (BusColumnPermission) tablePermission.getColumnMap().get(columnKey)) != null) {
 			rightsType = RightsType.getByKey((String) columnPermission.getResult());
 		}
@@ -140,8 +151,8 @@ public class BusinessObject extends BaseModel implements IBusinessObject {
 
 	private boolean a(boolean isEdit, String tableKey) {
 		BusTablePermission tablePermission;
-		if (this.F != null && (tablePermission = (BusTablePermission) this.F.getTableMap().get(tableKey)) != null) {
-			for (BusinessColumn column : this.E.a(tableKey).getTable().getColumnsWithoutPk()) {
+		if (this.permission != null && (tablePermission = (BusTablePermission) this.permission.getTableMap().get(tableKey)) != null) {
+			for (IBusinessColumn column : this.relation.find(tableKey).getTable().getColumnsWithoutPk()) {
 				if (isEdit && this.haveColumnDbEditRights(tableKey, column.getKey())) {
 					return true;
 				}

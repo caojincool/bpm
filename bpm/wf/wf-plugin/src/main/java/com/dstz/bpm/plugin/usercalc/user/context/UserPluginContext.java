@@ -42,7 +42,7 @@ public class UserPluginContext extends AbstractUserCalcPluginContext<UserPluginD
 		return UserPlugin.class;
 	}
 
-	protected UserPluginDef d(JSONObject pluginJson) {
+	protected UserPluginDef parseJson(JSONObject pluginJson) {
 		String source = pluginJson.getString("source");
 		UserPluginDef def = new UserPluginDef();
 		def.setSource(source);
@@ -55,7 +55,7 @@ public class UserPluginContext extends AbstractUserCalcPluginContext<UserPluginD
 		return def;
 	}
 
-	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
-		return this.d(jSONObject);
-	}
+//	protected BpmUserCalcPluginDef parseJson(JSONObject jSONObject) {
+//		return this.d(jSONObject);
+//	}
 }

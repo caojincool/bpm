@@ -15,7 +15,7 @@ public class FlowDataModelParse extends AbsFlowParse<BpmDataModel> {
 	}
 
 	public String validate(Object object) {
-		List list = (List) object;
+		List<BpmDataModel> list = (List) object;
 		HashSet<String> keys = new HashSet<String>();
 		for (BpmDataModel def : list) {
 			String key = def.getCode();
@@ -26,8 +26,8 @@ public class FlowDataModelParse extends AbsFlowParse<BpmDataModel> {
 		}
 		return "";
 	}
-
-	public void a(DefaultBpmProcessDef bpmProcessDef, Object object) {
+	@Override
+	public void setDefParam(DefaultBpmProcessDef bpmProcessDef, Object object) {
 		List list = (List) object;
 		bpmProcessDef.setDataModelList(list);
 	}
@@ -36,7 +36,6 @@ public class FlowDataModelParse extends AbsFlowParse<BpmDataModel> {
 		return true;
 	}
 
-	public void setDefParam(BpmDef bpmDef, Object object) {
-		this.a((DefaultBpmProcessDef) bpmDef, object);
-	}
+
+	
 }

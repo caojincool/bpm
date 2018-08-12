@@ -43,6 +43,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TaskCreateListener extends AbstractTaskListener<DefualtTaskActionCmd> {
+	
 	private static final long serialVersionUID = -7836822392037648008L;
 	@Resource
 	private BpmTaskManager aQ;
@@ -71,7 +72,7 @@ public class TaskCreateListener extends AbstractTaskListener<DefualtTaskActionCm
 	public void h(DefualtTaskActionCmd taskActionModel) {
 		IBpmTask task = taskActionModel.getBpmTask();
 		this.d((TaskActionCmd) taskActionModel);
-		this.aQ.create((Object) ((BpmTask) task));
+		this.aQ.create((BpmTask) task);
 		this.aO.createOpinionByTask((TaskActionCmd) taskActionModel);
 		BpmTaskStack stack = this.aR.createStackByTask(task, taskActionModel.getParentTaskStack());
 		taskActionModel.setTaskStack(stack);
@@ -86,7 +87,7 @@ public class TaskCreateListener extends AbstractTaskListener<DefualtTaskActionCm
 
 	private void d(TaskActionCmd taskActionModel) {
 		IBpmTask bpmTask = taskActionModel.getBpmTask();
-		List identityList = taskActionModel.getBpmIdentity(bpmTask.getNodeId());
+		List<SysIdentity> identityList = taskActionModel.getBpmIdentity(bpmTask.getNodeId());
 		BpmNodeDef nodeDef = this.a.getBpmNodeDef(bpmTask.getDefId(), bpmTask.getNodeId());
 		if (!nodeDef.getNodeProperties().isAllowExecutorEmpty() && BeanUtils.isEmpty((Object) identityList)) {
 			throw new WorkFlowException(bpmTask.getNodeId() + "任务候选人为空", (IStatusCode) BpmStatusCode.NO_ASSIGN_USER);
@@ -171,21 +172,34 @@ public class TaskCreateListener extends AbstractTaskListener<DefualtTaskActionCm
 		}
 		return TaskType.NORMAL.getKey();
 	}
-
-	public TaskActionCmd a(TaskEntity taskEntity) {
+	@Override
+	public DefualtTaskActionCmd a(TaskEntity taskEntity) {
 		return this.b(taskEntity);
 	}
+//
+//	public void c(TaskActionCmd taskActionCmd) {
+//		this.i((DefualtTaskActionCmd) taskActionCmd);
+//	}
+//
+//	public void b(TaskActionCmd taskActionCmd) {
+//		this.h((DefualtTaskActionCmd) taskActionCmd);
+//	}
 
-	public void c(TaskActionCmd taskActionCmd) {
-		this.i((DefualtTaskActionCmd) taskActionCmd);
+
+	@Override
+	public void a(DefualtTaskActionCmd taskActionCmd) {
+		this.g(taskActionCmd);
 	}
 
-	public void b(TaskActionCmd taskActionCmd) {
-		this.h((DefualtTaskActionCmd) taskActionCmd);
+	@Override
+	public void b(DefualtTaskActionCmd taskActionCmd) {
+		this.h(taskActionCmd);
 	}
 
-	public void a(TaskActionCmd taskActionCmd) {
-		this.g((DefualtTaskActionCmd) taskActionCmd);
+	@Override
+	public void c(DefualtTaskActionCmd taskActionCmd) {
+		this.i(taskActionCmd);
 	}
+
 
 }

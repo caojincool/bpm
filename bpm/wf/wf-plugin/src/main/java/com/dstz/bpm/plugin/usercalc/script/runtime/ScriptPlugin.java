@@ -22,7 +22,7 @@ public class ScriptPlugin extends AbstractUserCalcPlugin<ScriptPluginDef> {
 	@Resource
 	IGroovyScriptEngine groovyScriptEngine;
 
-	public List<SysIdentity> a(BpmUserCalcPluginSession pluginSession, ScriptPluginDef def) {
+	public List<SysIdentity> queryByPluginDef(BpmUserCalcPluginSession pluginSession, ScriptPluginDef def) {
 		String script = def.getScript();
 		if (StringUtil.isEmpty((String) script)) {
 			return Collections.EMPTY_LIST;
@@ -40,7 +40,7 @@ public class ScriptPlugin extends AbstractUserCalcPlugin<ScriptPluginDef> {
 		return false;
 	}
 
-	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
-		return this.a(bpmUserCalcPluginSession, (ScriptPluginDef) bpmTaskPluginDef);
-	}
+//	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
+//		return this.a(bpmUserCalcPluginSession, (ScriptPluginDef) bpmTaskPluginDef);
+//	}
 }

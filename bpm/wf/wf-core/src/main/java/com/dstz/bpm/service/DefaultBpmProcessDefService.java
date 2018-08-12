@@ -67,7 +67,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 
 	private BpmNodeDef a(List<SubProcessNodeDef> subList, String nodeId) {
 		for (SubProcessNodeDef nodeDef : subList) {
-			List nodeList = nodeDef.getChildBpmProcessDef().getBpmnNodeDefs();
+			List<BpmNodeDef> nodeList = nodeDef.getChildBpmProcessDef().getBpmnNodeDefs();
 			ArrayList<SubProcessNodeDef> nestSub = new ArrayList<SubProcessNodeDef>();
 			for (BpmNodeDef tmpDef : nodeList) {
 				if (tmpDef.getNodeId().equals(nodeId)) {
@@ -86,7 +86,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 
 	public BpmNodeDef getStartEvent(String processDefId) {
 		DefaultBpmProcessDef processDef = this.i(processDefId);
-		List list = processDef.getBpmnNodeDefs();
+		List<BpmNodeDef> list = processDef.getBpmnNodeDefs();
 		for (BpmNodeDef nodeDef : list) {
 			if (!nodeDef.getType().equals((Object) NodeType.START))
 				continue;
@@ -98,7 +98,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 	public List<BpmNodeDef> getEndEvents(String processDefId) {
 		ArrayList<BpmNodeDef> nodeList = new ArrayList<BpmNodeDef>();
 		DefaultBpmProcessDef processDef = this.i(processDefId);
-		List list = processDef.getBpmnNodeDefs();
+		List<BpmNodeDef> list = processDef.getBpmnNodeDefs();
 		for (BpmNodeDef nodeDef : list) {
 			if (!nodeDef.getType().equals((Object) NodeType.END))
 				continue;
@@ -134,7 +134,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 
 	public boolean isContainCallActivity(String defId) {
 		DefaultBpmProcessDef processDef = this.i(defId);
-		List list = processDef.getBpmnNodeDefs();
+		List<BpmNodeDef> list = processDef.getBpmnNodeDefs();
 		for (BpmNodeDef nodeDef : list) {
 			if (!nodeDef.getType().equals((Object) NodeType.CALLACTIVITY))
 				continue;
@@ -169,10 +169,10 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 		if (bpmProcessDef != null) {
 			return bpmProcessDef;
 		}
-		BpmDefinition bpmDef = (BpmDefinition) this.c.get((Serializable) ((Object) processDefinitionId));
+		BpmDefinition bpmDef = (BpmDefinition) this.c.get(processDefinitionId);
 		bpmProcessDef = this.e(bpmDef);
 		if (isCache.booleanValue()) {
-			this.bP.add("procdef_" + processDefinitionId, (Object) bpmProcessDef);
+			this.bP.add("procdef_" + processDefinitionId, bpmProcessDef);
 		}
 		return bpmProcessDef;
 	}
@@ -196,7 +196,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 
 	public List<BpmNodeDef> getNodesByType(String processDefinitionId, NodeType nodeType) {
 		DefaultBpmProcessDef processDef = this.i(processDefinitionId);
-		List list = processDef.getBpmnNodeDefs();
+		List<BpmNodeDef> list = processDef.getBpmnNodeDefs();
 		ArrayList<BpmNodeDef> rtnList = new ArrayList<BpmNodeDef>();
 		for (BpmNodeDef nodeDef : list) {
 			if (!nodeDef.getType().equals((Object) nodeType))
@@ -239,7 +239,7 @@ public class DefaultBpmProcessDefService implements BpmProcessDefService {
 	}
 
 	public IBpmDefinition getDefinitionById(String defId) {
-		return (IBpmDefinition) this.c.get((Serializable) ((Object) defId));
+		return (IBpmDefinition) this.c.get(defId);
 	}
 
 	public BpmProcessDef initBpmProcessDef(IBpmDefinition bpmDef) {

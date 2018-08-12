@@ -7,6 +7,10 @@ import com.dstz.base.db.tableoper.TableOperator;
 import com.dstz.bus.api.constant.BusTableRelFkType;
 import com.dstz.bus.api.constant.BusTableRelType;
 import com.dstz.bus.api.constant.BusinessObjectPersistenceType;
+import com.dstz.bus.api.model.IBusTableRel;
+import com.dstz.bus.api.model.IBusTableRelFk;
+import com.dstz.bus.api.model.IBusinessColumn;
+import com.dstz.bus.api.model.IBusinessData;
 import com.dstz.bus.manager.BusinessObjectManager;
 import com.dstz.bus.manager.BusinessTableManager;
 import com.dstz.bus.model.BusTableRel;
@@ -26,12 +30,25 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+/*
+ * 
+*    
+* 项目名称：bus-core   
+* 类名称：BusinessDataPersistenceDbService   
+* 类描述：   TODO:BusinessDataPersistenceDbService內部方法需要大規模的進行重新的梳理，各种匿名的方法和接口之间的转换需进行处理
+* 创建人：Xianchang.min   
+* 创建时间：2018年8月11日 下午6:18:25   
+* 修改人：Xianchang.min   
+* 修改时间：2018年8月11日 下午6:18:25   
+* 修改备注：   
+* @version  1.0  
+*
+ */
 @Service
 @Transactional
 public class BusinessDataPersistenceDbService implements BusinessDataPersistenceService {
 	@Autowired
-	private BusinessTableManager h;
+	private BusinessTableManager businessTableManager;
 	@Autowired
 	private BusinessObjectManager k;
 
@@ -41,7 +58,7 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 
 	public void saveData(BusinessData businessData) {
 		Object id;
-		TableOperator tableOperator = this.h.newTableOperator(businessData.getBusTableRel().getTable());
+		TableOperator tableOperator = this.businessTableManager.newTableOperator((BusinessTable) businessData.getBusTableRel().getTable());
 		String busTableRelType = businessData.getBusTableRel().getType();
 		if (!businessData.getBusTableRel().getBusObj()
 				.haveTableDbEditRights(businessData.getBusTableRel().getTableKey())) {
@@ -62,7 +79,7 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 			if (BeanUtils.isEmpty((Object) id)) {
 				businessData.setPk((Object) UniqueIdUtil.getSuid());
 				BusinessData parBusinessData = businessData.getParent();
-				for (BusTableRelFk fk : businessData.getBusTableRel().getFks()) {
+				for (IBusTableRelFk fk : businessData.getBusTableRel().getFks()) {
 					if (BusTableRelFkType.FIXED_VALUE.equalsWithKey(fk.getType())) {
 						businessData.put(fk.getFrom(), (Object) fk.getValue());
 						continue;
@@ -74,7 +91,7 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 					if (!BusTableRelFkType.CHILD_FIELD.equalsWithKey(fk.getType()))
 						continue;
 					parBusinessData.put(fk.getValue(), businessData.get(fk.getFrom()));
-					this.h.newTableOperator(parBusinessData.getBusTableRel().getTable())
+					this.businessTableManager.newTableOperator((BusinessTable) parBusinessData.getBusTableRel().getTable())
 							.updateData(parBusinessData.getDbData());
 				}
 				tableOperator.insertData(businessData.getDbData());
@@ -86,15 +103,15 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 	}
 
 	private void c(BusinessData businessData) {
-		for (BusTableRel rel : businessData.getBusTableRel().getChildren()) {
+		for (IBusTableRel rel : businessData.getBusTableRel().getChildren()) {
 			if (!rel.getBusObj().haveTableDbEditRights(rel.getTableKey()))
 				continue;
-			TableOperator tableOperator = this.h.newTableOperator(rel.getTable());
+			TableOperator tableOperator = this.businessTableManager.newTableOperator((BusinessTable)rel.getTable());
 			if (!BusTableRelType.ONE_TO_MANY.equalsWithKey(rel.getType())
 					&& !BusTableRelType.ONE_TO_ONE.equalsWithKey(rel.getType()))
 				continue;
 			HashMap<String, Object> param = new HashMap<String, Object>();
-			for (BusTableRelFk fk : rel.getFks()) {
+			for (IBusTableRelFk fk : rel.getFks()) {
 				if (BusTableRelFkType.FIXED_VALUE.equalsWithKey(fk.getType())) {
 					param.put(fk.getFrom(), fk.getValue());
 					continue;
@@ -106,23 +123,23 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 				if (!BusTableRelFkType.CHILD_FIELD.equalsWithKey(fk.getType()))
 					continue;
 			}
-			List oldDatas = new ArrayList();
+			List<Map<String, Object>> oldDatas = new ArrayList<Map<String, Object>>();
 			if (!param.isEmpty()) {
-				oldDatas = tableOperator.selectData(this.a(rel.getTable(), param));
+				oldDatas = tableOperator.selectData(this.a((BusinessTable)rel.getTable(), param));
 			}
-			List children = businessData.getChildren().computeIfAbsent(rel.getTableKey(), k -> new ArrayList());
+			List<IBusinessData> children = businessData.getChildren().computeIfAbsent(rel.getTableKey(), k -> new ArrayList());
 			block2 : for (Map oldData : oldDatas) {
-				Object id = oldData.get(rel.getTable().getPkName());
-				for (BusinessData data : children) {
+				Object id = oldData.get(((BusinessTable)rel.getTable()).getPkName());
+				for (IBusinessData data : children) {
 					if (!id.equals(data.getPk()))
 						continue;
 					continue block2;
 				}
-				this.a(oldData, rel);
+				this.a(oldData, (BusTableRel)rel);
 				tableOperator.deleteData(id);
 			}
-			for (BusinessData data : children) {
-				this.saveData(data);
+			for (IBusinessData data : children) {
+				this.saveData((BusinessData) data);
 			}
 		}
 	}
@@ -131,28 +148,28 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 		BusinessData businessData = new BusinessData();
 		BusTableRel busTableRel = businessObject.getRelation();
 		businessData.setBusTableRel(busTableRel);
-		BusinessTable businessTable = busTableRel.getTable();
+		BusinessTable businessTable = (BusinessTable) busTableRel.getTable();
 		if (BeanUtils.isEmpty((Object) id)) {
 			return businessData;
 		}
 		if (!businessObject.haveTableDbReadRights(busTableRel.getTableKey())) {
 			return businessData;
 		}
-		Map data = this.h.newTableOperator(businessTable).selectData(this.b(busTableRel), id);
+		Map data = this.businessTableManager.newTableOperator(businessTable).selectData(this.b(busTableRel), id);
 		businessData.setDbData(data);
 		this.a(businessData, busTableRel);
 		return businessData;
 	}
 
 	private void a(BusinessData businessData, BusTableRel busTableRel) {
-		for (BusTableRel rel : busTableRel.getChildren()) {
-			Object fk2;
-			BusinessTable table = rel.getTable();
+		for (IBusTableRel rel : busTableRel.getChildren()) {
+//			Object fk2;
+			BusinessTable table = (BusinessTable) rel.getTable();
 			if (!rel.getBusObj().haveTableDbReadRights(rel.getTableKey())) {
 				return;
 			}
 			HashMap<String, Object> param = new HashMap<String, Object>();
-			for (Object fk2 : rel.getFks()) {
+			for (IBusTableRelFk fk2 : rel.getFks()) {
 				if (BusTableRelFkType.FIXED_VALUE.equalsWithKey(fk2.getType())) {
 					param.put(fk2.getFrom(), fk2.getValue());
 					continue;
@@ -165,16 +182,17 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 					continue;
 				param.put(fk2.getFrom(), businessData.get(fk2.getValue()));
 			}
-			List dataMapList = this.h.newTableOperator(table).selectData(this.b(rel), this.a(table, param));
-			fk2 = dataMapList.iterator();
-			while (fk2.hasNext()) {
-				Map dataMap = (Map) fk2.next();
+			List<Map<String, Object>> dataMapList = this.businessTableManager.newTableOperator(table).selectData(this.b((BusTableRel)rel), this.a(table, param));
+			
+			Iterator<Map<String, Object>> iter2 = dataMapList.iterator();
+			while (iter2.hasNext()) {
+				Map<String, Object> dataMap = iter2.next();
 				BusinessData data = new BusinessData();
 				data.setBusTableRel(rel);
 				data.setParent(businessData);
 				data.setDbData(dataMap);
 				businessData.a(data);
-				this.a(data, rel);
+				this.a(data, (BusTableRel)rel);
 			}
 		}
 	}
@@ -184,19 +202,19 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 		if (!busTableRel.getBusObj().haveTableDbEditRights(busTableRel.getTableKey())) {
 			return;
 		}
-		Map data = this.h.newTableOperator(busTableRel.getTable()).selectData(id);
-		this.h.newTableOperator(busTableRel.getTable()).deleteData(data.get(busTableRel.getTable().getPkName()));
+		Map data = this.businessTableManager.newTableOperator((BusinessTable)busTableRel.getTable()).selectData(id);
+		this.businessTableManager.newTableOperator((BusinessTable)busTableRel.getTable()).deleteData(data.get(((BusinessTable)busTableRel.getTable()).getPkName()));
 		this.a(data, busTableRel);
 	}
 
 	private void a(Map<String, Object> dbData, BusTableRel busTableRel) {
-		for (BusTableRel rel : busTableRel.getChildren()) {
-			Object fk2;
+		for (IBusTableRel rel : busTableRel.getChildren()) {
+//			Object fk2;
 			if (!rel.getBusObj().haveTableDbEditRights(rel.getTableKey()))
 				continue;
 			HashMap<String, Object> param = new HashMap<String, Object>();
-			Map<String, Object> data = this.b(busTableRel.getTable(), dbData);
-			for (Object fk2 : rel.getFks()) {
+			Map<String, Object> data = this.b((BusinessTable)busTableRel.getTable(), dbData);
+			for (IBusTableRelFk fk2 : rel.getFks()) {
 				if (BusTableRelFkType.FIXED_VALUE.equalsWithKey(fk2.getType())) {
 					param.put(fk2.getFrom(), fk2.getValue());
 					continue;
@@ -206,21 +224,21 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 				param.put(fk2.getFrom(), data.get(fk2.getValue()));
 			}
 			if (rel.getChildren().isEmpty()) {
-				this.h.newTableOperator(rel.getTable()).deleteData(this.a(rel.getTable(), param));
+				this.businessTableManager.newTableOperator((BusinessTable)rel.getTable()).deleteData(this.a((BusinessTable)rel.getTable(), param));
 				continue;
 			}
-			List dataMapList = this.h.newTableOperator(rel.getTable()).selectData(this.a(rel.getTable(), param));
-			fk2 = dataMapList.iterator();
-			while (fk2.hasNext()) {
-				Map dataMap = (Map) fk2.next();
-				this.a(dataMap, rel);
+			List<Map<String, Object>> dataMapList = this.businessTableManager.newTableOperator((BusinessTable)rel.getTable()).selectData(this.a((BusinessTable)rel.getTable(), param));
+			Iterator<Map<String, Object>> iter = dataMapList.iterator();
+			while (iter.hasNext()) {
+				Map<String, Object> dataMap = iter.next();
+				this.a(dataMap, (BusTableRel)rel);
 			}
 		}
 	}
 
 	private List<String> b(BusTableRel busTableRel) {
 		ArrayList<String> columnName = new ArrayList<String>();
-		for (BusinessColumn column : busTableRel.getTable().getColumns()) {
+		for (IBusinessColumn column : busTableRel.getTable().getColumns()) {
 			if (!busTableRel.getBusObj().haveColumnDbReadRights(busTableRel.getTableKey(), column.getKey()))
 				continue;
 			columnName.add(column.getName());
@@ -231,7 +249,7 @@ public class BusinessDataPersistenceDbService implements BusinessDataPersistence
 	private Map<String, Object> a(BusinessTable table, Map<String, Object> map) {
 		HashMap<String, Object> dbData = new HashMap<String, Object>();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
-			String columnName = table.d(entry.getKey()).getName();
+			String columnName = table.getColumnByKey(entry.getKey()).getName();
 			dbData.put(columnName, entry.getValue());
 		}
 		return dbData;

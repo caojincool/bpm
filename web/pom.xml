@@ -5,7 +5,7 @@
     <parent>
         <artifactId>agile-bpm</artifactId>
         <groupId>com.dstz.agilebpm</groupId>
-        <version>1.1.5</version>
+        <version>6.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -114,9 +114,9 @@
     </build>
 
     <properties>
-        <base.version>1.1.5</base.version>
-        <bpm.version>1.1.5</bpm.version>
-        <platform.version>1.1.5</platform.version>
+        <base.version>6.0.0</base.version>
+        <bpm.version>6.0.0</bpm.version>
+        <platform.version>6.0.0</platform.version>
     </properties>
 
     <dependencies>
@@ -130,6 +130,11 @@
         <dependency>
             <groupId>com.dstz.agilebpm</groupId>
             <artifactId>wf-rest</artifactId>
+            <version>${bpm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dstz.agilebpm</groupId>
+            <artifactId>wf-plugin</artifactId>
             <version>${bpm.version}</version>
         </dependency>
 
@@ -215,6 +220,11 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
 
+        <dependency>
+        	<groupId>com.dstz.agilebpm</groupId>
+        	<artifactId>wf-act</artifactId>
+        	<version>${bpm.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

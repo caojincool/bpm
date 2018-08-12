@@ -51,7 +51,7 @@ public class TaskIdentityLinkManagerImpl extends BaseManager<String, TaskIdentit
 	}
 
 	public Set<String> getUserRights(String userId) {
-		List list = this.n.getGroupsByUserId(userId);
+		List<IGroup> list = this.n.getGroupsByUserId(userId);
 		HashSet<String> rights = new HashSet<String>();
 		rights.add(String.format("%s-%s", userId, "user"));
 		if (BeanUtils.isEmpty((Object) list)) {

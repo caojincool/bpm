@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dstz.base.core.executor.ExecutorFactory;
 import com.dstz.base.core.util.BeanUtils;
 import com.dstz.bus.api.constant.BusTableRelType;
+import com.dstz.bus.api.model.IBusTableRel;
 import com.dstz.bus.api.model.IBusinessData;
 import com.dstz.bus.api.model.IBusinessObject;
 import com.dstz.bus.api.model.IBusinessPermission;
@@ -17,30 +18,34 @@ import com.dstz.bus.manager.BusinessObjectManager;
 import com.dstz.bus.model.BusTableRel;
 import com.dstz.bus.model.BusinessData;
 import com.dstz.bus.model.BusinessObject;
-import com.dstz.bus.model.permission.BusObjPermission;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BusinessDataService implements IBusinessDataService {
+	
+	
 	@Autowired
-	BusinessObjectManager k;
+	private BusinessObjectManager businessObjectManager;
 
 	public void saveFormDefData(JSONObject data, IBusinessPermission businessPermission) {
-		Iterator var3 = data.entrySet().iterator();
+		
+		Set<Entry<String, Object>> sets= data.entrySet();
+		Iterator<Entry<String, Object>> iter = sets.iterator();
 
-		while (var3.hasNext()) {
-			Entry<String, Object> entry = (Entry) var3.next();
-			String boKey = (String) entry.getKey();
+		while (iter.hasNext()) {
+			Entry<String, Object> entry = iter.next();
+			String boKey = entry.getKey();
 			JSONObject boData = (JSONObject) entry.getValue();
 			BusinessData businessData = (BusinessData) this.parseBusinessData(boData, boKey);
-			businessData.getBusTableRel().getBusObj()
-					.setPermission((BusObjPermission) businessPermission.getBusObj(boKey));
+			businessData.getBusTableRel().getBusObj().setPermission(businessPermission.getBusObj(boKey));
 			BusinessDataPersistenceServiceFactory.saveData(businessData);
 		}
 
@@ -58,7 +63,7 @@ public class BusinessDataService implements IBusinessDataService {
 	}
 
 	private void b(BusinessData businessData) {
-		BusTableRel busTableRel = businessData.getBusTableRel();
+		IBusTableRel busTableRel = businessData.getBusTableRel();
 		businessData.setDbData(busTableRel.getTable().initDbData());
 		Iterator var3 = busTableRel.getChildren().iterator();
 
@@ -132,7 +137,7 @@ public class BusinessDataService implements IBusinessDataService {
 
 				if (enty.getValue() instanceof JSONArray) {
 					String tableKey = ((String) enty.getKey()).substring(0, ((String) enty.getKey()).length() - 4);
-					BusTableRel rel = relation.a(tableKey);
+					BusTableRel rel = (BusTableRel) relation.find(tableKey);
 					Iterator var10 = ((JSONArray) enty.getValue()).iterator();
 
 					while (var10.hasNext()) {
@@ -142,7 +147,7 @@ public class BusinessDataService implements IBusinessDataService {
 				}
 
 				if (enty.getValue() instanceof JSONObject) {
-					BusTableRel rel = relation.a((String) enty.getKey());
+					BusTableRel rel = (BusTableRel) relation.find(enty.getKey());
 					businessData.a(this.a(enty.getValue(), rel));
 				}
 			}
@@ -166,7 +171,7 @@ public class BusinessDataService implements IBusinessDataService {
 	}
 
 	public IBusinessData parseBusinessData(JSONObject jsonObject, String boKey) {
-		BusinessObject businessObject = this.k.getFilledByKey(boKey);
+		BusinessObject businessObject = this.businessObjectManager.getFilledByKey(boKey);
 		return this.a((Object) jsonObject, (BusTableRel) businessObject.getRelation());
 	}
 }

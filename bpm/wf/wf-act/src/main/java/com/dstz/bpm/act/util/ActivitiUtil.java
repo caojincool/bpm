@@ -33,19 +33,19 @@ public class ActivitiUtil {
 		ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
 				.getDeployedProcessDefinition(actDefId);
 		ActivityImpl curAct = processDefinition.findActivity(nodeId);
-		List outTrans = curAct.getOutgoingTransitions();
+		List<PvmTransition> outTrans = curAct.getOutgoingTransitions();
 		try {
-			List cloneOutTrans = (List) FileUtil.cloneObject((Object) outTrans);
+			List<PvmTransition> cloneOutTrans = (List) FileUtil.cloneObject(outTrans);
 			map.put("outTrans", cloneOutTrans);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		for (PvmTransition transition : outTrans) {
 			PvmActivity activity = transition.getDestination();
-			List inTrans = activity.getIncomingTransitions();
-			Iterator itIn = inTrans.iterator();
+			List<PvmTransition> inTrans = activity.getIncomingTransitions();
+			Iterator<PvmTransition> itIn = inTrans.iterator();
 			while (itIn.hasNext()) {
-				PvmTransition inTransition = (PvmTransition) itIn.next();
+				PvmTransition inTransition = itIn.next();
 				if (!inTransition.getSource().getId().equals(curAct.getId()))
 					continue;
 				itIn.remove();

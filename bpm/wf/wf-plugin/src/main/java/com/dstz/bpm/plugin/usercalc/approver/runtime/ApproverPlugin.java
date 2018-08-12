@@ -5,6 +5,7 @@ import com.dstz.bpm.api.engine.plugin.def.BpmTaskPluginDef;
 import com.dstz.bpm.api.model.task.IBpmTask;
 import com.dstz.bpm.api.model.task.IBpmTaskOpinion;
 import com.dstz.bpm.core.manager.BpmTaskOpinionManager;
+import com.dstz.bpm.core.model.BpmTaskOpinion;
 import com.dstz.bpm.engine.model.BpmIdentity;
 import com.dstz.bpm.engine.plugin.runtime.abstact.AbstractUserCalcPlugin;
 import com.dstz.bpm.engine.plugin.session.BpmUserCalcPluginSession;
@@ -20,10 +21,10 @@ public class ApproverPlugin extends AbstractUserCalcPlugin<ApproverPluginDef> {
 	@Resource
 	private BpmTaskOpinionManager aa;
 
-	public List<SysIdentity> a(BpmUserCalcPluginSession pluginSession, ApproverPluginDef pluginDef) {
+	public List<SysIdentity> queryByPluginDef(BpmUserCalcPluginSession pluginSession, ApproverPluginDef pluginDef) {
 		ArrayList<SysIdentity> bpmIdentities = new ArrayList<SysIdentity>();
-		List taskOpinionList = this.aa.getByInstId(pluginSession.getBpmTask().getInstId());
-		for (IBpmTaskOpinion taskOpinion : taskOpinionList) {
+		List<BpmTaskOpinion> taskOpinionList = this.aa.getByInstId(pluginSession.getBpmTask().getInstId());
+		for (BpmTaskOpinion taskOpinion : taskOpinionList) {
 			if (StringUtil.isEmpty((String) taskOpinion.getApprover()))
 				continue;
 			BpmIdentity bpmIdentity = new BpmIdentity(taskOpinion.getApprover(), taskOpinion.getApproverName(), "user");
@@ -32,7 +33,7 @@ public class ApproverPlugin extends AbstractUserCalcPlugin<ApproverPluginDef> {
 		return bpmIdentities;
 	}
 
-	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
-		return this.a(bpmUserCalcPluginSession, (ApproverPluginDef) bpmTaskPluginDef);
-	}
+//	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
+//		return this.a(bpmUserCalcPluginSession, (ApproverPluginDef) bpmTaskPluginDef);
+//	}
 }

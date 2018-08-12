@@ -31,13 +31,13 @@ public class SignTaskPluginContext extends AbstractBpmTaskPluginContext<SignTask
 		return "会签任务插件";
 	}
 
-	protected SignTaskPluginDef f(JSON json) {
+	protected SignTaskPluginDef parseFromJson(JSON json) {
 		SignTaskPluginDef def = (SignTaskPluginDef) JSON.parseObject((String) json.toJSONString(),
 				SignTaskPluginDef.class);
 		return def;
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.f(jSON);
-	}
+//	protected BpmPluginDef parseFromJson(JSON jSON) {
+//		return this.f(jSON);
+//	}
 }

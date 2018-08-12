@@ -26,7 +26,7 @@ public class BusinessDataPersistenceServiceFactory {
 	}
 
 	public static void saveData(BusinessData businessData) {
-		BusinessObject businessObject = businessData.getBusTableRel().getBusObj();
+		BusinessObject businessObject = (BusinessObject)businessData.getBusTableRel().getBusObj();
 		BusinessDataPersistenceService businessDataPersistenceService = BusinessDataPersistenceServiceFactory
 				.getBusinessDataPersistenceServiceByType(businessObject.getPersistenceType());
 		businessDataPersistenceService.saveData(businessData);

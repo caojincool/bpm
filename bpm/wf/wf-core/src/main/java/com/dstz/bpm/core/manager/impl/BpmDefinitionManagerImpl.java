@@ -18,6 +18,7 @@ import com.dstz.bpm.core.dao.BpmDefinitionDao;
 import com.dstz.bpm.core.manager.BpmDefinitionManager;
 import com.dstz.bpm.core.manager.BpmInstanceManager;
 import com.dstz.bpm.core.model.BpmDefinition;
+import com.dstz.bpm.core.model.BpmInstance;
 import com.dstz.bpm.engine.model.DefaultBpmProcessDef;
 import com.dstz.sys.api.constant.EnvironmentConstant;
 import com.dstz.sys.api.constant.RightsObjectConstants;
@@ -66,27 +67,41 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+/**
+ * 
+*    
+* 项目名称：wf-core   
+* 类名称：BpmDefinitionManagerImpl   
+* 类描述：  TODO: BpmDefinitionManagerImpl  几个内部方法的推测
+* 创建人：Xianchang.min   
+* 创建时间：2018年8月11日 下午7:22:07   
+* 修改人：Xianchang.min   
+* 修改时间：2018年8月11日 下午7:22:07   
+* 修改备注：   
+* @version  1.0  
+*
+ */
 @Service(value = "bpmDefinitionManager")
 public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition> implements BpmDefinitionManager {
 	@Resource
-	BpmDefinitionDao d;
+	private BpmDefinitionDao bpmDefinitionDao;
 	@Resource
-	BpmProcessDefService a;
+	private BpmProcessDefService bpmProcessDefService;
 	@Resource
-	RepositoryService repositoryService;
+	private RepositoryService repositoryService;
 	@Resource
-	ProcessEngineConfiguration processEngineConfiguration;
+	private ProcessEngineConfiguration processEngineConfiguration;
 	@Resource
-	SysAuthorizationService e;
+	private SysAuthorizationService sysAuthorizationService;
 	@Resource
-	BpmInstanceManager f;
+	private BpmInstanceManager bpmInstanceManager;
 
-	public void a(BpmDefinition bpmDefinition) {
-		if (StringUtil.isNotEmpty((String) bpmDefinition.getId())) {
-			this.d(bpmDefinition);
+	public void create(BpmDefinition bpmDefinition) {
+		if (StringUtil.isNotEmpty(bpmDefinition.getId())) {
+			this.update(bpmDefinition);
 			return;
 		}
-		List defList = this.d.getByKey(bpmDefinition.getKey());
+		List defList = this.bpmDefinitionDao.getByKey(bpmDefinition.getKey());
 		if (BeanUtils.isNotEmpty((Object) defList)) {
 			throw new BusinessException("流程定义Key重复：" + bpmDefinition.getKey());
 		}
@@ -98,7 +113,7 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 		bpmDefinition.setMainDefId(defId);
 		String modelId = this.b(bpmDefinition);
 		bpmDefinition.setActModelId(modelId);
-		this.d.create((Object) bpmDefinition);
+		this.bpmDefinitionDao.create(bpmDefinition);
 	}
 
 	private String b(BpmDefinition bpmDefinition) {
@@ -128,33 +143,32 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 	}
 
 	public void updateBpmnModel(Model model, MultiValueMap<String, String> values) throws Exception {
-		ByteArrayInputStream svgStream = new ByteArrayInputStream(
-				((String) values.getFirst((Object) "svg_xml")).getBytes("utf-8"));
-		TranscoderInput input = new TranscoderInput((InputStream) svgStream);
-		String bpmDefSettingJSON = (String) values.getFirst((Object) "bpmDefSetting");
-		BpmDefinition bpmDef = this.d.getMainByDefKey(model.getKey());
-		bpmDef.setName((String) values.getFirst((Object) "name"));
-		bpmDef.setDesc((String) values.getFirst((Object) "description"));
+		ByteArrayInputStream svgStream = new ByteArrayInputStream(values.getFirst("svg_xml").getBytes("utf-8"));
+		TranscoderInput input = new TranscoderInput(svgStream);
+		String bpmDefSettingJSON = (String) values.getFirst( "bpmDefSetting");
+		BpmDefinition bpmDef = this.bpmDefinitionDao.getMainByDefKey(model.getKey());
+		bpmDef.setName((String) values.getFirst("name"));
+		bpmDef.setDesc((String) values.getFirst("description"));
 		bpmDef.setDefSetting(bpmDefSettingJSON);
 		PNGTranscoder transcoder = new PNGTranscoder();
 		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		TranscoderOutput output = new TranscoderOutput((OutputStream) outStream);
 		transcoder.transcode(input, output);
 		byte[] result = outStream.toByteArray();
-		byte[] b = ((String) values.getFirst((Object) "json_xml")).getBytes("utf-8");
+		byte[] b = ((String) values.getFirst("json_xml")).getBytes("utf-8");
 		this.repositoryService.addModelEditorSource(model.getId(), b);
-		boolean publish = Boolean.parseBoolean((String) values.getFirst((Object) "publish"));
+		boolean publish = Boolean.parseBoolean((String) values.getFirst("publish"));
 		ObjectNode modelNode = (ObjectNode) new ObjectMapper().readTree(b);
 		BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel((JsonNode) modelNode);
 		byte[] bpmnBytes = new BpmnXMLConverter().convertToXML(bpmnModel);
-		if (StringUtil.isEmpty((String) bpmDef.getActDefId()) || publish) {
+		if (StringUtil.isEmpty(bpmDef.getActDefId()) || publish) {
 			this.b(bpmDef, model, bpmnBytes);
 		} else {
 			this.a(bpmDef, model, bpmnBytes);
 		}
 		this.repositoryService.saveModel(model);
 		this.repositoryService.addModelEditorSourceExtra(model.getId(), result);
-		DefaultBpmProcessDef def = (DefaultBpmProcessDef) this.a.initBpmProcessDef((IBpmDefinition) bpmDef);
+		DefaultBpmProcessDef def = (DefaultBpmProcessDef) this.bpmProcessDefService.initBpmProcessDef((IBpmDefinition) bpmDef);
 		if ("deploy".equals(bpmDef.getStatus()) && "deploy".equals(def.getExtProperties().getStatus())
 				&& !AppUtil.getCtxEnvironment().contains(EnvironmentConstant.PROD.key())) {
 			throw new BusinessException("除了生产环境外，已发布状态的流程禁止修改！");
@@ -164,7 +178,7 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 				|| !bpmDef.getSupportMobile().equals(def.getExtProperties().getSupportMobile())) {
 			bpmDef.setStatus(def.getExtProperties().getStatus());
 			bpmDef.setSupportMobile(def.getExtProperties().getSupportMobile());
-			this.d.update((Object) bpmDef);
+			this.bpmDefinitionDao.update(bpmDef);
 		}
 		this.c(bpmDef);
 		outStream.close();
@@ -185,7 +199,7 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 				.name(model.getKey() + ".bpmn20.xml");
 		bpmnParse.execute();
 		BpmnModel bpmnModel = bpmnParse.getBpmnModel();
-		deploymentManager.getBpmnModelCache().add(bpmnProcessDef.getId(), (Object) bpmnModel);
+		deploymentManager.getBpmnModelCache().add(bpmnProcessDef.getId(), bpmnModel);
 		byte[] diagramBytes = IoUtil.readInputStream(
 				(InputStream) this.processEngineConfiguration.getProcessDiagramGenerator().generateDiagram(bpmnModel,
 						"png", this.processEngineConfiguration.getActivityFontName(),
@@ -193,10 +207,10 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 						this.processEngineConfiguration.getAnnotationFontName(),
 						this.processEngineConfiguration.getClassLoader()),
 				null);
-		this.d.updateActResourceEntity(bpmnProcessDef.getDeploymentId(), model.getKey() + ".bpmn20.xml", bpmnBytes);
-		this.d.updateActResourceEntity(bpmnProcessDef.getDeploymentId(),
+		this.bpmDefinitionDao.updateActResourceEntity(bpmnProcessDef.getDeploymentId(), model.getKey() + ".bpmn20.xml", bpmnBytes);
+		this.bpmDefinitionDao.updateActResourceEntity(bpmnProcessDef.getDeploymentId(),
 				model.getKey() + "." + bpmnProcessDef.getKey() + ".png", diagramBytes);
-		this.d(definition);
+		this.update(definition);
 	}
 
 	private void b(BpmDefinition definition, Model model, byte[] bpmnBytes) {
@@ -213,13 +227,13 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 			if (StringUtil.isEmpty((String) definition.getActDefId())) {
 				definition.setActDefId(proDefinition.getId());
 				definition.setActDeployId(deployment.getId());
-				this.d(definition);
+				this.update(definition);
 				return;
 			}
 			String newDefId = UniqueIdUtil.getSuid();
 			definition.setIsMain("N");
 			definition.setMainDefId(newDefId);
-			this.d(definition);
+			this.update(definition);
 			definition.setId(newDefId);
 			definition.setIsMain("Y");
 			definition.setRev(Integer.valueOf(0));
@@ -229,18 +243,18 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 			definition.setActDefId(proDefinition.getId());
 			definition.setActDeployId(deployment.getId());
 			definition.setActModelId(model.getId());
-			this.d.create((Object) definition);
+			this.bpmDefinitionDao.create(definition);
 		} catch (Exception e) {
 			throw new RuntimeException("Invoke natProDefinitionService.deploy method error = " + e.getMessage());
 		}
 	}
 
 	public BpmDefinition getMainDefByActModelId(String actModelId) {
-		return this.d.getMainDefByActModelId(actModelId);
+		return this.bpmDefinitionDao.getMainDefByActModelId(actModelId);
 	}
 
 	private void c(BpmDefinition def) {
-		List defList = this.d.getByKey(def.getKey());
+		List<BpmDefinition> defList = this.bpmDefinitionDao.getByKey(def.getKey());
 		for (BpmDefinition defEntity : defList) {
 			AppUtil.publishEvent((ApplicationEvent) new BpmDefinitionUpdateEvent((IBpmDefinition) defEntity));
 		}
@@ -248,28 +262,28 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 	}
 
 	public BpmDefinition getDefinitionByActDefId(String actDefId) {
-		return this.d.getByActDefId(actDefId);
+		return this.bpmDefinitionDao.getByActDefId(actDefId);
 	}
 
 	public BpmDefinition getByKey(String flowKey) {
-		return this.d.getMainByDefKey(flowKey);
+		return this.bpmDefinitionDao.getMainByDefKey(flowKey);
 	}
 
 	public List<BpmDefinition> getMyDefinitionList(String userId, QueryFilter queryFilter) {
-		Map map = this.e.getUserRightsSql(RightsObjectConstants.FLOW, userId, null);
+		Map<String, Object> map = this.sysAuthorizationService.getUserRightsSql(RightsObjectConstants.FLOW, userId, null);
 		queryFilter.addParams(map);
-		return this.d.getMyDefinitionList(queryFilter);
+		return this.bpmDefinitionDao.getMyDefinitionList(queryFilter);
 	}
 
 	public void remove(String entityId) {
-		BpmDefinition definition = (BpmDefinition) this.d.get((Serializable) ((Object) entityId));
-		if (this.a(definition.getId())) {
+		BpmDefinition definition = (BpmDefinition) this.bpmDefinitionDao.get(entityId);
+		if (this.hasProcessInstance(definition.getId())) {
 			throw new BusinessException("该流程定义下存在流程实例，请勿删除！<br> 请清除数据后再来删除");
 		}
-		List definitionList = this.d.getByKey(definition.getKey());
+		List<BpmDefinition> definitionList = this.bpmDefinitionDao.getByKey(definition.getKey());
 		for (BpmDefinition def : definitionList) {
 			AppUtil.publishEvent((ApplicationEvent) new BpmDefinitionUpdateEvent((IBpmDefinition) def));
-			this.d.remove((Serializable) ((Object) def.getId()));
+			this.bpmDefinitionDao.remove(def.getId());
 			if (!StringUtil.isNotEmpty((String) def.getActDeployId()))
 				continue;
 			this.repositoryService.deleteDeployment(def.getActDeployId());
@@ -279,36 +293,21 @@ public class BpmDefinitionManagerImpl extends BaseManager<String, BpmDefinition>
 		}
 	}
 
-	private boolean a(String defId) {
+	private boolean hasProcessInstance(String defId) {
 		DefaultQueryFilter query = new DefaultQueryFilter();
-		query.addFilter("def_id_", (Object) defId, QueryOP.EQUAL);
-		List list = this.f.query((QueryFilter) query);
+		query.addFilter("def_id_", defId, QueryOP.EQUAL);
+		List<BpmInstance> list = this.bpmInstanceManager.query(query);
 		return BeanUtils.isNotEmpty((Object) list);
 	}
 
-	public void d(BpmDefinition entity) {
+	public void update(BpmDefinition entity) {
 		entity.setUpdateTime(new Date());
-		int updateRows = this.d.update((Object) entity);
+		int updateRows = this.bpmDefinitionDao.update(entity);
 		if (updateRows == 0) {
 			AppUtil.publishEvent((ApplicationEvent) new BpmDefinitionUpdateEvent((IBpmDefinition) entity));
 			throw new RuntimeException("流程定义更新失败，当前版本并非最新版本！已经刷新当前服务器缓存，请刷新页面重新修改提交。id:" + entity.getId() + "reversion:"
 					+ entity.getRev());
 		}
 	}
-
-	public void update(Serializable serializable) {
-		this.d((BpmDefinition) serializable);
-	}
-
-	public void create(Serializable serializable) {
-		this.a((BpmDefinition) serializable);
-	}
-
-	public void update(Object object) {
-		this.d((BpmDefinition) object);
-	}
-
-	public void create(Object object) {
-		this.a((BpmDefinition) object);
-	}
+	
 }

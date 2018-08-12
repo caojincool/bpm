@@ -60,7 +60,7 @@ public class InstanceStartEventListener extends AbstractInstanceListener {
 	public void a(InstanceActionCmd instanceActionModel) {
 		this.LOG.debug("流程实例【{}】执行启动过程 instanceID:[{}]", (Object) instanceActionModel.getBpmInstance().getSubject(),
 				(Object) instanceActionModel.getBpmInstance().getId());
-		Map actionVariables = instanceActionModel.getActionVariables();
+		Map<String, Object> actionVariables = instanceActionModel.getActionVariables();
 		if (BeanUtils.isEmpty((Object) actionVariables)) {
 			return;
 		}
@@ -112,12 +112,12 @@ public class InstanceStartEventListener extends AbstractInstanceListener {
 		ruleVariables.putAll(data.getVariables());
 		Map boMap = data.getBizDataMap();
 		if (BeanUtils.isNotEmpty((Object) boMap)) {
-			Set bocodes = boMap.keySet();
+			Set<String> bocodes = boMap.keySet();
 			for (String bocode : bocodes) {
 				IBusinessData bizData = (IBusinessData) boMap.get(bocode);
-				Map dataMap = bizData.getData();
+				Map<String, Object> dataMap = bizData.getData();
 				for (Map.Entry entry : dataMap.entrySet()) {
-					ruleVariables.put(bocode + "." + (String) entry.getKey(), entry.getValue());
+					ruleVariables.put(bocode + "." + entry.getKey(), entry.getValue());
 				}
 			}
 		}
@@ -173,7 +173,7 @@ public class InstanceStartEventListener extends AbstractInstanceListener {
 		BpmInstance subInstance = this.f.genInstanceByDefinition((IBpmDefinition) subDefinition);
 		subInstance.setActInstId(excutionEntity.getProcessInstanceId());
 		subInstance.setParentInstId(preAction.getBpmInstance().getId());
-		this.f.create((Object) subInstance);
+		this.f.create(subInstance);
 		DefaultInstanceActionCmd startAction = new DefaultInstanceActionCmd();
 		startAction.setBpmDefinition((IBpmDefinition) subDefinition);
 		startAction.setBpmInstance((IBpmInstance) subInstance);

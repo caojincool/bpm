@@ -20,7 +20,7 @@ public class SameNodePlugin extends AbstractUserCalcPlugin<SameNodePluginDef> {
 	@Resource
 	private BpmTaskOpinionManager aa;
 
-	public List<SysIdentity> a(BpmUserCalcPluginSession pluginSession, SameNodePluginDef sameNodeDef) {
+	public List<SysIdentity> queryByPluginDef(BpmUserCalcPluginSession pluginSession, SameNodePluginDef sameNodeDef) {
 		ArrayList<SysIdentity> bpmIdentities = new ArrayList<SysIdentity>();
 		List taskOpinionList = this.aa.getByInstAndNode(pluginSession.getBpmTask().getInstId(),
 				sameNodeDef.getNodeId());
@@ -37,7 +37,7 @@ public class SameNodePlugin extends AbstractUserCalcPlugin<SameNodePluginDef> {
 		return false;
 	}
 
-	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
-		return this.a(bpmUserCalcPluginSession, (SameNodePluginDef) bpmTaskPluginDef);
-	}
+//	public List queryByPluginDef(BpmUserCalcPluginSession bpmUserCalcPluginSession, BpmTaskPluginDef bpmTaskPluginDef) {
+//		return this.a(bpmUserCalcPluginSession, (SameNodePluginDef) bpmTaskPluginDef);
+//	}
 }

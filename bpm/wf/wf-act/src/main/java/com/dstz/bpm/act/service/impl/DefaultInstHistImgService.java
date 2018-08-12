@@ -49,15 +49,15 @@ public class DefaultInstHistImgService implements BpmImageService {
 	private HistoryService historyService;
 
 	public InputStream draw(String actDefId, String actInstId) throws Exception {
-		InputStream imageStream;
-		if (StringUtil.isEmpty((String) actDefId)) {
+		InputStream imageStream = null;
+		if (StringUtil.isEmpty(actDefId)) {
 			throw new BusinessException("流程定义actDefId不能缺失", (IStatusCode) BpmStatusCode.PARAM_ILLEGAL);
 		}
-		if (StringUtil.isEmpty((String) actInstId)) {
+		if (StringUtil.isEmpty(actInstId)) {
 			return this.b(actDefId);
 		}
 		List<String> activeActivityIds = new ArrayList<String>();
-		List<Object> highLightedFlows = new ArrayList();
+		List<String> highLightedFlows = new ArrayList<>();
 		if (this.a(actInstId)) {
 			activeActivityIds.add(((HistoricActivityInstance) this.historyService.createHistoricActivityInstanceQuery()
 					.executionId(actInstId).activityType("endEvent").singleResult()).getActivityId());
@@ -67,9 +67,8 @@ public class DefaultInstHistImgService implements BpmImageService {
 		List historicActivityInstances = ((HistoricActivityInstanceQuery) this.historyService
 				.createHistoricActivityInstanceQuery().executionId(actInstId).orderByHistoricActivityInstanceStartTime()
 				.asc()).list();
-		highLightedFlows = this.a((ProcessDefinitionEntity) ((RepositoryServiceImpl) this.repositoryService)
-				.getDeployedProcessDefinition(actDefId), historicActivityInstances);
-		imageStream = null;
+		highLightedFlows = this.a((ProcessDefinitionEntity) ((RepositoryServiceImpl) this.repositoryService).getDeployedProcessDefinition(actDefId), historicActivityInstances);
+		
 		if (null != activeActivityIds) {
 			try {
 				ProcessEngineConfigurationImpl processEngineConfiguration = this.i.getProcessEngineConfiguration();
@@ -77,8 +76,7 @@ public class DefaultInstHistImgService implements BpmImageService {
 				DefaultProcessDiagramGenerator diagramGenerator = new DefaultProcessDiagramGenerator();
 				imageStream = diagramGenerator.generateDiagram(bpmnModel, "png", activeActivityIds, highLightedFlows,
 						processEngineConfiguration.getActivityFontName(), processEngineConfiguration.getLabelFontName(),
-						processEngineConfiguration.getAnnotationFontName(), processEngineConfiguration.getClassLoader(),
-						1.0);
+						processEngineConfiguration.getAnnotationFontName(), processEngineConfiguration.getClassLoader(),1.0);
 			} catch (Throwable throwable) {
 				IOUtils.closeQuietly(imageStream);
 				throw throwable;
@@ -106,7 +104,7 @@ public class DefaultInstHistImgService implements BpmImageService {
 				ActivityImpl sameActivityImpl2 = processDefinitionEntity.findActivity(activityImpl2.getActivityId());
 				sameStartTimeNodes.add(sameActivityImpl2);
 			}
-			List pvmTransitions = activityImpl.getOutgoingTransitions();
+			List<PvmTransition> pvmTransitions = activityImpl.getOutgoingTransitions();
 			for (PvmTransition pvmTransition : pvmTransitions) {
 				ActivityImpl pvmActivityImpl = (ActivityImpl) pvmTransition.getDestination();
 				if (!sameStartTimeNodes.contains((Object) pvmActivityImpl))

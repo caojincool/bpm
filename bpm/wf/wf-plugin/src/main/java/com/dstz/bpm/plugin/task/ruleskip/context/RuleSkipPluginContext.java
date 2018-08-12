@@ -32,14 +32,14 @@ public class RuleSkipPluginContext extends AbstractBpmTaskPluginContext<RuleSkip
 		return "任务消息插件";
 	}
 
-	protected RuleSkipPluginDef e(JSON json) {
+	protected RuleSkipPluginDef parseFromJson(JSON json) {
 		RuleSkipPluginDef def = new RuleSkipPluginDef();
 		List list = JSON.parseArray((String) json.toJSONString(), JumpRule.class);
 		def.setJumpRules(list);
 		return def;
 	}
 
-	protected BpmPluginDef parseFromJson(JSON jSON) {
-		return this.e(jSON);
-	}
+//	protected BpmPluginDef parseFromJson(JSON jSON) {
+//		return this.e(jSON);
+//	}
 }

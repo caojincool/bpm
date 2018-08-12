@@ -7,11 +7,12 @@
 	<parent>
 		<groupId>com.dstz.agilebpm</groupId>
 		<artifactId>wf</artifactId>
-		<version>1.1.5</version>
+		<version>6.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	
 	<artifactId>wf-act</artifactId>
-	<name>bus-api</name>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.dstz.agilebpm</groupId>
@@ -24,7 +25,6 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.6</version>
 		</dependency>
 
 		<dependency>
